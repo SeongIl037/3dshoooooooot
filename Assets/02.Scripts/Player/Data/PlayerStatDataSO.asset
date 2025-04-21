@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f452f40879c2749478c1e7f864612eb4, type: 3}
+  m_Name: PlayerStatDataSO
+  m_EditorClassIdentifier: 
+  WalkSpeed: 7
+  RunSpeed: 12
+  JumpPower: 5
+  DashPower: 15
+  DashSpeed: 0.5
+  ClimbSpeed: 0.5
+  DashStamina: 3
+  Stamina: 5
+  StaminaMax: 5
+  MaxJumpCount: 2
