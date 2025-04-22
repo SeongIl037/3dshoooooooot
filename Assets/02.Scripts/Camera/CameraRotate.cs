@@ -16,7 +16,6 @@ public class CameraRotate : MonoBehaviour
     {
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
-        Debug.Log($"Mouse X : {mouseX}, Mouse Y : {mouseY}");
 
         // Todo : 마우스 좌표계와 화면 좌표계의 차이점을 알고, 잘작동 하도록 아래 한줄의 코드를 수정한다.
         _rotationX += mouseX * RotationSpeed * Time.deltaTime;
