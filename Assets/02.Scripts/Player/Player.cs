@@ -15,7 +15,8 @@ public class Player : MonoBehaviour
     public int StaminaMax => MoveDatas.StaminaMax;
     public int MaxJumpCount => MoveDatas.MaxJumpCount;
 
-    [Header("stamina")] public float Stamina = 0f;
+    [Header("stamina")] 
+    public float Stamina = 0f;
     public void StaminaRecovery()
     {
         Stamina += Time.deltaTime;

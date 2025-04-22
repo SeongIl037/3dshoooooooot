@@ -1836,6 +1836,7 @@ GameObject:
   - component: {fileID: 1879978738}
   - component: {fileID: 1879978737}
   - component: {fileID: 1879978742}
+  - component: {fileID: 1879978743}
   - component: {fileID: 1879978740}
   - component: {fileID: 1879978741}
   m_Layer: 0
@@ -1940,10 +1941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98aba38a9ba93ee41b11e4faf9f31a7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveDatas: {fileID: 11400000, guid: 1fde7bdd987af3b409e99aeda9affad0, type: 2}
-  MoveSpeed: 7
-  _dashTimer: 0.5
-  Stamina: 5
+  DashTimer: 0.5
 --- !u!143 &1879978742
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1969,6 +1967,20 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1879978743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879978735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e12b65fce7cbfb49a6a3e559d5f53c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MoveDatas: {fileID: 11400000, guid: 1fde7bdd987af3b409e99aeda9affad0, type: 2}
+  Stamina: 0
 --- !u!1 &1917532735
 GameObject:
   m_ObjectHideFlags: 0
