@@ -7,10 +7,9 @@ public class PlayerStatSO : ScriptableObject
     public float RunSpeed;
     public float JumpPower;
     public float DashPower;
-    public float DashSpeed;
+    public float DashTime;
     public float ClimbSpeed;
     public float DashStamina;
-    public float Stamina;
-    public float StaminaMax;
+    public int StaminaMax;
     public int MaxJumpCount;
 }

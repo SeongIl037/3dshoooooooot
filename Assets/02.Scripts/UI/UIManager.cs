@@ -7,7 +7,7 @@ public class UIManager : MonoBehaviour
     public Slider StaminaBar;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private void Awake()
+    private void Start()
     {
         if (instance == null)
         {

@@ -14,11 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WalkSpeed: 7
   RunSpeed: 12
-  JumpPower: 5
-  DashPower: 15
-  DashSpeed: 0.5
+  JumpPower: 3
+  DashPower: 20
+  DashTime: 0.5
   ClimbSpeed: 0.5
   DashStamina: 3
-  Stamina: 5
   StaminaMax: 5
   MaxJumpCount: 2

@@ -1,17 +1,28 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerMove : MonoBehaviour
 {
-    public PlayerStatSO MoveDatas;
+    [SerializeField]
+    private PlayerStatSO MoveDatas;
+    // 기본 데이터
+    public float WalkSpeed => MoveDatas.WalkSpeed;
+    public float RunSpeed => MoveDatas.RunSpeed;
+    public float JumpPower => MoveDatas.JumpPower;
+    public float DashPower => MoveDatas.DashPower;
+    public float DashTime => MoveDatas.DashTime;
+    public float ClimbSpeed => MoveDatas.ClimbSpeed;
+    public float DashStamina => MoveDatas.DashStamina;
+    public int StaminaMax => MoveDatas.StaminaMax;
+    public int MaxJumpCount => MoveDatas.MaxJumpCount;
     
     [Header("Movement")]
     public float MoveSpeed = 5f;
     private bool _isRunning = false;
     [Header("Dash")]
-    public bool _isDashing = false;
-    private float _dashTimer = 0.5f;
+    public float _dashTimer = 0.5f;
+    private bool _isDashing = false;
     private Vector3 _dashDirection;
     [Header("Jump")]
     private int _jumpCount = 0;
@@ -31,24 +42,6 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
-
-        Move();
-        
-        StaminaIncrease();
-        
-        if(_characterController.isGrounded)
-        {
-            Running();
-            Dashing();   
-        }
-        
-        Jump();
-        WallClimb(); 
-
-    }
-
-    private void Move()
-    {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         
@@ -60,18 +53,25 @@ public class PlayerMove : MonoBehaviour
         _yVelocity += GRAVITY * Time.deltaTime;
         dir.y = _yVelocity;
         _characterController.Move(dir * MoveSpeed * Time.deltaTime);
-
-    }
-    private void Jump()
-    {
-        if (_characterController.isGrounded)
+        
+        Jump();
+        WallClimb(); 
+        
+        if(_characterController.isGrounded)
         {
             _jumpCount = 0;
+            Running();
+            Dashing();   
         }
-        
-        if (Input.GetButtonDown("Jump") && _jumpCount < MoveDatas.MaxJumpCount)
+
+        StaminaIncrease();
+    }
+
+    private void Jump()
+    {
+        if (Input.GetButtonDown("Jump") && _jumpCount < MaxJumpCount)
         {
-            _yVelocity = MoveDatas.JumpPower;
+            _yVelocity = JumpPower;
             _jumpCount += 1;
         }
     }
@@ -89,24 +89,24 @@ public class PlayerMove : MonoBehaviour
         
         if (_isRunning)
         {
-            MoveSpeed = MoveDatas.RunSpeed;
+            MoveSpeed = RunSpeed;
             StaminaDecrease();
         }
         else if(_isRunning == false)
         {
-            MoveSpeed = MoveDatas.WalkSpeed;
+            MoveSpeed = WalkSpeed;
         }
 
     }
 
     private void Dashing()
     {
-        if (Input.GetKeyDown(KeyCode.E) && _isDashing == false && Stamina > MoveDatas.DashStamina)
+        if (Input.GetKeyDown(KeyCode.E) && _isDashing == false && Stamina > DashStamina)
         {
-            Stamina -= MoveDatas.DashStamina;
+            Stamina -= DashStamina;
             
             _isDashing = true;
-            _dashTimer = MoveDatas.DashSpeed;
+            _dashTimer = DashTime;
 
             _dashDirection = Camera.main.transform.forward;
             _dashDirection.y = 0;
@@ -117,7 +117,7 @@ public class PlayerMove : MonoBehaviour
         
         if (_isDashing)
         {
-            _characterController.Move(_dashDirection * MoveDatas.DashPower * Time.deltaTime);
+            _characterController.Move(_dashDirection * DashPower * Time.deltaTime);
             _dashTimer -= Time.deltaTime;
             if (_dashTimer <= 0)
             {
@@ -128,15 +128,23 @@ public class PlayerMove : MonoBehaviour
 
     private void WallClimb()
     {
-        if (_characterController.collisionFlags == CollisionFlags.Sides && Input.GetButton("Jump") && Stamina > 0)
+        if (_characterController.collisionFlags == CollisionFlags.Sides )
         {
-            _yVelocity = MoveDatas.ClimbSpeed;
-            _isClimbing = true;
-            StaminaDecrease();
+            if (Input.GetButton("Jump") && Stamina > 0)
+            {
+                _yVelocity = ClimbSpeed;
+                _isClimbing = true;
+                StaminaDecrease();
+            }
+            else
+            {
+                _yVelocity += GRAVITY;
+                _isClimbing = false;
+            }
+        
         }
-        else 
+        else
         {
-            _yVelocity += GRAVITY * Time.deltaTime;
             _isClimbing = false;
         }
     }
@@ -144,7 +152,7 @@ public class PlayerMove : MonoBehaviour
     private void StaminaDecrease()
     {
         Stamina -= Time.deltaTime;
-        Stamina = Mathf.Clamp(Stamina, 0, MoveDatas.StaminaMax);
+        Stamina = Mathf.Clamp(Stamina, 0, StaminaMax);
         UIManager.instance.StaminaRefresh(Stamina);
     }
 
@@ -155,7 +163,7 @@ public class PlayerMove : MonoBehaviour
             return; 
         } 
         Stamina += Time.deltaTime;
-        Stamina = Mathf.Clamp(Stamina, 0, MoveDatas.StaminaMax);
+        Stamina = Mathf.Clamp(Stamina, 0, StaminaMax);
         UIManager.instance.StaminaRefresh(Stamina);
     }
     
