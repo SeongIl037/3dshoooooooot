@@ -4,40 +4,27 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    [SerializeField]
-    private PlayerStatSO MoveDatas;
-    // 기본 데이터
-    public float WalkSpeed => MoveDatas.WalkSpeed;
-    public float RunSpeed => MoveDatas.RunSpeed;
-    public float JumpPower => MoveDatas.JumpPower;
-    public float DashPower => MoveDatas.DashPower;
-    public float DashTime => MoveDatas.DashTime;
-    public float ClimbSpeed => MoveDatas.ClimbSpeed;
-    public float DashStamina => MoveDatas.DashStamina;
-    public int StaminaMax => MoveDatas.StaminaMax;
-    public int MaxJumpCount => MoveDatas.MaxJumpCount;
-    
-    [Header("Movement")]
-    public float MoveSpeed = 5f;
+    private Player _player;
+    // 움직임
+    private float _moveSpeed = 5f;
     private bool _isRunning = false;
     [Header("Dash")]
-    public float _dashTimer = 0.5f;
+    public float DashTimer = 0.5f;
     private bool _isDashing = false;
     private Vector3 _dashDirection;
-    [Header("Jump")]
+    //점프
     private int _jumpCount = 0;
     private bool _isJumping = false;
-    [Header("Gravity")]
+    // 중력
     private const float GRAVITY = -9.8f; // 중력
     private float _yVelocity = 0f; // 중력가속도
-    [Header("stamina")]
-    public float Stamina = 0f;
-    [Header("climb")]
+    //벽타기
     private bool _isClimbing = false;
     private CharacterController _characterController;
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
+        _player = GetComponent<Player>();
     }
 
     private void Update()
@@ -52,7 +39,7 @@ public class PlayerMove : MonoBehaviour
         
         _yVelocity += GRAVITY * Time.deltaTime;
         dir.y = _yVelocity;
-        _characterController.Move(dir * MoveSpeed * Time.deltaTime);
+        _characterController.Move(dir * _moveSpeed * Time.deltaTime);
         
         Jump();
         WallClimb(); 
@@ -69,57 +56,57 @@ public class PlayerMove : MonoBehaviour
 
     private void Jump()
     {
-        if (Input.GetButtonDown("Jump") && _jumpCount < MaxJumpCount)
+        if (Input.GetButtonDown("Jump") && _jumpCount < _player.MaxJumpCount)
         {
-            _yVelocity = JumpPower;
+            _yVelocity = _player.JumpPower;
             _jumpCount += 1;
         }
     }
     
     private void Running()
     {
-        if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0)
+        if (Input.GetKey(KeyCode.LeftShift) && _player.Stamina > 0)
         {
             _isRunning = true;
         }
-        else if (Input.GetKeyUp(KeyCode.LeftShift) || Stamina <= 0)
+        else if (Input.GetKeyUp(KeyCode.LeftShift) || _player.Stamina <= 0)
         {
             _isRunning = false;
         }
         
         if (_isRunning)
         {
-            MoveSpeed = RunSpeed;
-            StaminaDecrease();
+            _moveSpeed = _player.RunSpeed;
+            _player.StaminaDecrease();
         }
         else if(_isRunning == false)
         {
-            MoveSpeed = WalkSpeed;
+            _moveSpeed = _player.WalkSpeed;
         }
 
     }
 
     private void Dashing()
     {
-        if (Input.GetKeyDown(KeyCode.E) && _isDashing == false && Stamina > DashStamina)
+        if (Input.GetKeyDown(KeyCode.E) && _isDashing == false && _player.Stamina > _player.DashStamina)
         {
-            Stamina -= DashStamina;
+            _player.Stamina -= _player.DashStamina;
             
             _isDashing = true;
-            _dashTimer = DashTime;
+            DashTimer = _player.DashTime;
 
             _dashDirection = Camera.main.transform.forward;
             _dashDirection.y = 0;
             _dashDirection.Normalize();
-            UIManager.instance.StaminaRefresh(Stamina);
+            UIManager.instance.StaminaRefresh(_player.Stamina);
             
         }
         
         if (_isDashing)
         {
-            _characterController.Move(_dashDirection * DashPower * Time.deltaTime);
-            _dashTimer -= Time.deltaTime;
-            if (_dashTimer <= 0)
+            _characterController.Move(_dashDirection * _player.DashPower * Time.deltaTime);
+            DashTimer -= Time.deltaTime;
+            if (DashTimer <= 0)
             {
                 _isDashing = false;
             }
@@ -130,11 +117,11 @@ public class PlayerMove : MonoBehaviour
     {
         if (_characterController.collisionFlags == CollisionFlags.Sides )
         {
-            if (Input.GetButton("Jump") && Stamina > 0)
+            if (Input.GetButton("Jump") && _player.Stamina > 0)
             {
-                _yVelocity = ClimbSpeed;
+                _yVelocity = _player.ClimbSpeed;
                 _isClimbing = true;
-                StaminaDecrease();
+                _player.StaminaDecrease();
             }
             else
             {
@@ -149,22 +136,13 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void StaminaDecrease()
-    {
-        Stamina -= Time.deltaTime;
-        Stamina = Mathf.Clamp(Stamina, 0, StaminaMax);
-        UIManager.instance.StaminaRefresh(Stamina);
-    }
-
     private void StaminaIncrease()
     {
         if (_isDashing || _isJumping || _isRunning || _isClimbing)
         {
             return; 
         } 
-        Stamina += Time.deltaTime;
-        Stamina = Mathf.Clamp(Stamina, 0, StaminaMax);
-        UIManager.instance.StaminaRefresh(Stamina);
+        _player.StaminaRecovery();
     }
     
 }
