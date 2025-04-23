@@ -17,7 +17,6 @@ public class Player : MonoBehaviour
     // 발사 데이터
     [SerializeField]
     private PlayerFireSO FireDatas;
-
     public int MaxBombCount => FireDatas.MaxBombCount;
     public int BulletMaxCount => FireDatas.BulletMaxCount;
     public float ReloadTime => FireDatas.ReloadTime;

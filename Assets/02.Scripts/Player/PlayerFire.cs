@@ -96,6 +96,15 @@ public class PlayerFire : MonoBehaviour
             FireCooldown = 0;
             // 게임 수학 : 선형대수학, 기하학
             UIManager.instance.BulletRefresh(BulletCount,_player.BulletMaxCount);
+            if (hitInfo.collider.gameObject.CompareTag("Enemy"))
+            {
+                Enemy enemy = hitInfo.collider.GetComponent<Enemy>();
+                Damage damage = new Damage();
+                damage.Value = 1;
+                damage.From = this.gameObject;
+                damage.KnockBack = 50;
+                enemy.TakeDamage(damage);
+            }
         }
     }
     private void BombFire()

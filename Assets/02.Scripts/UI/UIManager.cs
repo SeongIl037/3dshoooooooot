@@ -2,28 +2,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Singletone<UIManager>
 {
-    public static UIManager instance;
     public TextMeshProUGUI BombCount;
     public GameObject ThrowBar;
     public Slider ThrowPowerSlider;
     public Slider StaminaBar;
     public TextMeshProUGUI BulletCount;
     public Image ReloadBar;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private void Start()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
 
     public void StaminaRefresh(float value)
     {
