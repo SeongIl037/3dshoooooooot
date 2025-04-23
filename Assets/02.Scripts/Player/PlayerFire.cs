@@ -21,6 +21,7 @@ public class PlayerFire : MonoBehaviour
     public ParticleSystem BulletEffect;
 
     private Player _player;
+    public Lazer Lazer;
 
     private void Start()
     {
@@ -83,6 +84,9 @@ public class PlayerFire : MonoBehaviour
         RaycastHit hitInfo = new RaycastHit();
         // 4. 레이를 발사한 다음,                    ㄴ 에 데이터가 있다면 피격 이펙트 생성(표시)
         bool isHit = Physics.Raycast(ray, out hitInfo);
+        
+        Lazer.LazerShoot(FirePosition.transform.position, hitInfo.point);
+
         if (isHit)
         {
             BulletEffect.transform.position = hitInfo.point; // 피격 이펙트 생성
