@@ -42,12 +42,11 @@ public class PlayerMove : MonoBehaviour
         _characterController.Move(dir * _moveSpeed * Time.deltaTime);
         
         Jump();
-        WallClimb(); 
-        
+        WallClimb();
+        Running();
         if(_characterController.isGrounded)
         {
             _jumpCount = 0;
-            Running();
             Dashing();   
         }
 
