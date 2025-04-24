@@ -15,14 +15,41 @@ public class CameraRotate : MonoBehaviour
     // 2. 마우스 입력으로부터 회전시킬 방향을 만든다.
     private void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X");
-        float mouseY = Input.GetAxis("Mouse Y");
+        RotateCamera();
+    }
 
-        // Todo : 마우스 좌표계와 화면 좌표계의 차이점을 알고, 잘작동 하도록 아래 한줄의 코드를 수정한다.
-        _rotationX += mouseX * RotationSpeed * Time.deltaTime;
-        _rotationY += -mouseY * RotationSpeed * Time.deltaTime;
-        _rotationY = Mathf.Clamp(_rotationY, -90f, 90f);
+    private void RotateCamera()
+    {
+        if (CameraChanger.instance.Type == CameraType.FpsCamera)
+        {
+            float mouseX = Input.GetAxis("Mouse X");
+            float mouseY = Input.GetAxis("Mouse Y");
 
-        transform.eulerAngles = new Vector3(_rotationY, _rotationX, 0f);
+            // Todo : 마우스 좌표계와 화면 좌표계의 차이점을 알고, 잘작동 하도록 아래 한줄의 코드를 수정한다.
+            _rotationX += mouseX * RotationSpeed * Time.deltaTime;
+            _rotationY += -mouseY * RotationSpeed * Time.deltaTime;
+            _rotationY = Mathf.Clamp(_rotationY, -90f, 90f);
+
+            transform.eulerAngles = new Vector3(_rotationY, _rotationX, 0f);
+        }
+        else if(CameraChanger.instance.Type == CameraType.TpsCamera)
+        {
+            float mouseX = Input.GetAxis("Mouse X");
+            float mouseY = Input.GetAxis("Mouse Y");
+
+            // Todo : 마우스 좌표계와 화면 좌표계의 차이점을 알고, 잘작동 하도록 아래 한줄의 코드를 수정한다.
+            _rotationX += mouseX * RotationSpeed * Time.deltaTime;
+            _rotationY += -mouseY * RotationSpeed * Time.deltaTime;
+            _rotationY = Mathf.Clamp(_rotationY, -90f, 90f);
+            
+            CameraFollow follow = CameraChanger.instance.GetComponent<CameraFollow>();
+            
+            transform.eulerAngles = new Vector3(_rotationY, _rotationX, 0f);
+            follow.FPSTarget.eulerAngles = new Vector3(_rotationY,_rotationX, 0f);
+        }
+        else if (CameraChanger.instance.Type == CameraType.QuarterCamera)
+        {
+            
+        }
     }
 }

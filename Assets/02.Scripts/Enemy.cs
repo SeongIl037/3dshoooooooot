@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Rendering.UI;
 using Random = System.Random;
 
@@ -28,6 +29,7 @@ public class Enemy : MonoBehaviour
 
     private GameObject _player;
     private CharacterController _characterController;
+    private NavMeshAgent _agent;
     private Vector3 _startPosition;
     private Vector3 goalDir;
     
@@ -48,6 +50,9 @@ public class Enemy : MonoBehaviour
         
     private void Start()
     { 
+        _agent = GetComponent<NavMeshAgent>();
+        _agent.speed = MoveSpeed;
+        
         _player = GameObject.FindGameObjectWithTag("Player");
         _characterController = GetComponent<CharacterController>();
         _startPosition = transform.position;
@@ -161,8 +166,8 @@ public class Enemy : MonoBehaviour
         
         Vector3 dir = (_player.transform.position - transform.position).normalized;
         //플레이어를 추적한다.
-        _characterController.Move(dir * MoveSpeed * Time.deltaTime);
-
+        // _characterController.Move(dir * MoveSpeed * Time.deltaTime);
+        _agent.SetDestination(_player.transform.position);
     }
 
     private void Return()
@@ -184,8 +189,9 @@ public class Enemy : MonoBehaviour
         
         Vector3 dir = (_startPosition - transform.position).normalized;
         //플레이어를 추적한다.
-        _characterController.Move(dir * MoveSpeed * Time.deltaTime);
+        // _characterController.Move(dir * MoveSpeed * Time.deltaTime);
         // 처음 자리로 돌아간다.,
+        _agent.SetDestination(_startPosition);
     }
 
     private void Atttck()
@@ -217,6 +223,8 @@ public class Enemy : MonoBehaviour
     //         Debug.Log("상태전환 : Damaged -> Trace");
     //         CurrentState = EnemyState.Trace;
     //     }
+    _agent.isStopped = true;
+    _agent.ResetPath();
     yield return new WaitForSeconds(DamagedTime);
     Debug.Log("");
     CurrentState = EnemyState.Trace;
