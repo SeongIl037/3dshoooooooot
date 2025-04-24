@@ -1,43 +1,44 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class EnemyPool : MonoBehaviour
 {
-    public List<GameObject> BombPrefab;
-    public int BombCount = 3;
-    [SerializeField]
-    private List<GameObject> _bomb;
+    public List<GameObject> EnemyPrefab;
+    public int EnemyCount = 3;
+    [FormerlySerializedAs("_Enemy")] [SerializeField]
+    private List<GameObject> _enemy;
 
     private void Start()
     {
-        _bomb = new List<GameObject>(BombPrefab.Count * BombCount);
-        foreach (GameObject bomb in BombPrefab)
+        _enemy = new List<GameObject>(EnemyPrefab.Count * EnemyCount);
+        foreach (GameObject bomb in EnemyPrefab)
         {
-            for (int i = 0; i < BombCount; i++)
+            for (int i = 0; i < EnemyCount; i++)
             {
-                GameObject bombPrefab = Instantiate(bomb);
+                GameObject enemyPrefab = Instantiate(bomb);
                 
-                bombPrefab.transform.SetParent(this.transform);
-                bombPrefab.SetActive(false);
+                enemyPrefab.transform.SetParent(this.transform);
+                enemyPrefab.SetActive(false);
                 
-                _bomb.Add(bombPrefab);
+                _enemy.Add(enemyPrefab);
                 
             }
         }
         
     }
 
-    public GameObject MakeBomb(Vector3 position)
+    public GameObject MakeEnemy(Vector3 position)
     {
-        foreach (GameObject bomb in _bomb)
+        foreach (GameObject enemy in _enemy)
         {
-            if (bomb.activeInHierarchy == false)
+            if (enemy.activeInHierarchy == false)
             {
-                bomb.transform.position = position;
+                enemy.transform.position = position;
                 
-                bomb.SetActive(true);
+                enemy.SetActive(true);
 
-                return bomb;
+                return enemy;
             }
 
         }
