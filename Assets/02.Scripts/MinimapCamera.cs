@@ -1,13 +1,16 @@
+using System.Drawing;
 using UnityEngine;
-
+using DG.Tweening;
 public class MinimapCamera : MonoBehaviour
 {
     public Transform Target;
     public float YOffset = 10;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private float _currentSize;
+    public float SizeChange = 5f;
+    private float _changeTime = 1f;
+    private float _sizeMax = 40f;
     
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         Vector3 newPosition = Target.position;
         newPosition.y += YOffset;
@@ -18,5 +21,19 @@ public class MinimapCamera : MonoBehaviour
         newEulerAngles.z = 0;
         
         transform.eulerAngles = newEulerAngles;
+    }
+
+    public void OthorIncrease()
+    {
+        _currentSize = this.GetComponent<Camera>().orthographicSize;
+        float newSize = _currentSize - SizeChange;
+        this.GetComponent<Camera>().DOOrthoSize(Mathf.Max(newSize, SizeChange), _changeTime).SetEase(Ease.OutCirc);
+    }
+
+    public void OthorDecrease()
+    {
+        _currentSize = this.GetComponent<Camera>().orthographicSize;
+        float newSize = _currentSize + SizeChange;
+        this.GetComponent<Camera>().DOOrthoSize(Mathf.Min(newSize,_sizeMax), _changeTime).SetEase(Ease.OutCirc);
     }
 }

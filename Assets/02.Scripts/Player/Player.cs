@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     public float ThrowPowerMax => FireDatas.ThrowPowerMax;
     [Header("stamina")] 
     public float Stamina = 0f;
+    public float Health = 100f;
     
     
     public void StaminaRecovery()

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +11,8 @@ public class UIManager : Singletone<UIManager>
     public Slider StaminaBar;
     public TextMeshProUGUI BulletCount;
     public Image ReloadBar;
-
+    
+    
     public void StaminaRefresh(float value)
     {
         StaminaBar.value = value;

@@ -36,6 +36,18 @@ public class PlayerFire : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Cursor.lockState = CursorLockMode.None; 
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Cursor.lockState = CursorLockMode.Locked; 
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            Cursor.lockState = CursorLockMode.Confined; 
+        }
         // 발사 쿨타임
         if (FireCooldown < _player.FireCooldown)
         {
@@ -106,6 +118,24 @@ public class PlayerFire : MonoBehaviour
                 damage.From = this.gameObject;
                 damage.KnockBack = 50;
                 enemy.TakeDamage(damage);
+            }
+            else if (hitInfo.collider.gameObject.CompareTag("Enemy"))
+            {
+                RunningEnemy ene = hitInfo.collider.GetComponent<RunningEnemy>();
+                Damage damage = new Damage();
+                damage.Value = 10;
+                damage.From = this.gameObject;
+                damage.KnockBack = 0;
+                ene.TakeDamage(damage);
+            }
+            else if (hitInfo.collider.gameObject.CompareTag("Barrel"))
+            {
+                Barrel barrel = hitInfo.collider.GetComponent<Barrel>();
+                Damage damage = new Damage();
+                damage.Value = 10;
+                damage.From = this.gameObject;
+                damage.KnockBack = 0;
+                barrel.TakeDamage(damage);
             }
         }
     }
