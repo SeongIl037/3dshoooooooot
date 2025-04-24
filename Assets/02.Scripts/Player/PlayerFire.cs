@@ -11,7 +11,7 @@ public class PlayerFire : MonoBehaviour
     public int BulletCount = 50;
     public float FireCooldown = 0.5f;
     public float Reloading = 0;
-    
+        
     private bool _reload = false;
     // 필요 속성
     // - 발사 위치
@@ -46,9 +46,10 @@ public class PlayerFire : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             ReloadCancel();
-            
             if (FireCooldown >= _player.FireCooldown && BulletCount > 0)
             {
+                
+                _mainCamera.GetComponent<CameraShake>().ShakeCamera();
                 BulletFire();
             }
         }
@@ -68,6 +69,7 @@ public class PlayerFire : MonoBehaviour
         if (Input.GetMouseButton(1) && BombCount > 0)
         {
             IncreaseThrowPower();
+            
         }
         if (Input.GetMouseButtonUp(1) && BombCount > 0)
         {
