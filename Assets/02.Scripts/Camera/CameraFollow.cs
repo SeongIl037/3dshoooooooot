@@ -4,11 +4,8 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
 
-    public Transform FPSTarget;
-    public Transform TPSTarget;
-    public Transform QuaterTarget;
 
-    private void LateUpdate()
+    private void Update()
     {
         CameraTransition();
     }
@@ -17,13 +14,13 @@ public class CameraFollow : MonoBehaviour
         switch (CameraChanger.instance.Type)
         {
             case CameraType.FpsCamera:
-                transform.position = FPSTarget.position;
+                transform.position = CameraChanger.instance.TargetPosition.position;
                 break;
             case CameraType.TpsCamera:
-                transform.position = TPSTarget.position;
+                transform.position = CameraChanger.instance.TargetPosition.position;
                 break;
             case CameraType.QuarterCamera:
-                transform.position = QuaterTarget.position;
+                transform.position = CameraChanger.instance.TargetPosition.position;
                 break;
 
         }

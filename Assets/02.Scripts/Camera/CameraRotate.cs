@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 public class CameraRotate : MonoBehaviour
 {
     public float RotationSpeed = 15f;
+    
     // 카메라 각도는 0도에서부터 시작한다고 기준을 세운다.
     private float _rotationX = 0f;
     private float _rotationY = 0f;
@@ -13,6 +14,7 @@ public class CameraRotate : MonoBehaviour
     // 구현 순서
     // 1. 마우스 입력을 받는다
     // 2. 마우스 입력으로부터 회전시킬 방향을 만든다.
+   
     private void Update()
     {
         RotateCamera();
@@ -20,7 +22,7 @@ public class CameraRotate : MonoBehaviour
 
     private void RotateCamera()
     {
-        if (CameraChanger.instance.Type == CameraType.FpsCamera)
+        if (CameraChanger.instance.Type == CameraType.FpsCamera||CameraChanger.instance.Type == CameraType.TpsCamera)
         {
             float mouseX = Input.GetAxis("Mouse X");
             float mouseY = Input.GetAxis("Mouse Y");
@@ -31,25 +33,10 @@ public class CameraRotate : MonoBehaviour
             _rotationY = Mathf.Clamp(_rotationY, -90f, 90f);
 
             transform.eulerAngles = new Vector3(_rotationY, _rotationX, 0f);
-        }
-        else if(CameraChanger.instance.Type == CameraType.TpsCamera)
-        {
-            float mouseX = Input.GetAxis("Mouse X");
-            float mouseY = Input.GetAxis("Mouse Y");
-
-            // Todo : 마우스 좌표계와 화면 좌표계의 차이점을 알고, 잘작동 하도록 아래 한줄의 코드를 수정한다.
-            _rotationX += mouseX * RotationSpeed * Time.deltaTime;
-            _rotationY += -mouseY * RotationSpeed * Time.deltaTime;
-            _rotationY = Mathf.Clamp(_rotationY, -90f, 90f);
             
-            CameraFollow follow = CameraChanger.instance.GetComponent<CameraFollow>();
-            
-            transform.eulerAngles = new Vector3(_rotationY, _rotationX, 0f);
-            follow.FPSTarget.eulerAngles = new Vector3(_rotationY,_rotationX, 0f);
+           CameraChanger.instance.FPSPosition.eulerAngles = transform.eulerAngles;
+           CameraChanger.instance.QuarterPosition.eulerAngles = new Vector3(0f, 0f, 0f);
         }
-        else if (CameraChanger.instance.Type == CameraType.QuarterCamera)
-        {
-            
-        }
+        
     }
 }

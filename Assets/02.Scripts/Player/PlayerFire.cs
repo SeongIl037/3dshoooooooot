@@ -119,7 +119,7 @@ public class PlayerFire : MonoBehaviour
                 damage.KnockBack = 50;
                 enemy.TakeDamage(damage);
             }
-            else if (hitInfo.collider.gameObject.CompareTag("Enemy"))
+            else if (hitInfo.collider.gameObject.CompareTag("RunEnemy"))
             {
                 RunningEnemy ene = hitInfo.collider.GetComponent<RunningEnemy>();
                 Damage damage = new Damage();
