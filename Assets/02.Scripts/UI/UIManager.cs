@@ -7,6 +7,7 @@ using Color = UnityEngine.Color;
 
 public class UIManager : Singletone<UIManager>
 {
+    public Slider PlayerHealthSlider;
     public Image HitEffect;
     public Image SubHitEffect;
     private float _subDuration = 0.05f;

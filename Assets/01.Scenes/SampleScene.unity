@@ -657,9 +657,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
+  m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4136,6 +4136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aaf7863a77bfdb42af60e9fb4adecf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerHealthSlider: {fileID: 0}
   HitEffect: {fileID: 1079759808}
   SubHitEffect: {fileID: 1391773149}
   BombCount: {fileID: 630055952}
