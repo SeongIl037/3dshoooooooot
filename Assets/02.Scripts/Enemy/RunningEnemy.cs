@@ -150,7 +150,7 @@ public class RunningEnemy : MonoBehaviour, IDamageable
         _agent.isStopped = true;
         _agent.ResetPath();
         yield return new WaitForSeconds(DamagedTime);
-
+        CurrentState = EnemyState.Trace;
     }
 
     
