@@ -19,7 +19,7 @@ public class RunningEnemy : MonoBehaviour
     // 상태를 지정한다.
     public EnemyState CurrentState = EnemyState.Idle;
     public float MoveSpeed = 5f;
-    public int Health = 100;
+    public int Health = 50;
 
     private GameObject _player;
     private NavMeshAgent _agent;
@@ -78,6 +78,7 @@ public class RunningEnemy : MonoBehaviour
         }
         
         Health -= damage.Value;
+        Debug.Log(Health);
         
         if (Health <= 0)
         {

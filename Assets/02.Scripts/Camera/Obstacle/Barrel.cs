@@ -6,7 +6,7 @@ using UnityEngine;
 public class Barrel : MonoBehaviour
 {   
     private Player _player;
-    private int _barrelHealth = 100;
+    private int _barrelHealth = 50;
     public GameObject ExplosionVFX;
     private int _explosionDamages = 50;
     private float _explosionForce = 700;
@@ -39,6 +39,13 @@ public class Barrel : MonoBehaviour
         
         foreach (Collider check in around)
         {
+            Damage damage = new Damage();
+            damage.Value = _explosionDamages;
+            damage.From = this.gameObject;
+            damage.KnockBack = 0;
+            
+            _rigidbody.AddTorque(transform.position);
+            
             if (check.CompareTag("Player"))
             {
                 _player.Health -= _explosionDamages;
@@ -46,20 +53,33 @@ public class Barrel : MonoBehaviour
             }
             else if (check.CompareTag("Enemy"))
             {
-                check.GetComponent<Enemy>().Health -= _explosionDamages;
+                check.GetComponent<Enemy>().TakeDamage(damage);
                 Debug.Log(check.GetComponent<Enemy>().Health);
             }
-
-            Rigidbody rb = check.GetComponent<Rigidbody>();
-            
-            if (rb != null)
+            else if (check.CompareTag("RunEnemy"))
             {
-                rb.AddExplosionForce(_explosionForce,transform.position,_radius);
+                check.GetComponent<RunningEnemy>().TakeDamage(damage);
+            }
+            else if (check.CompareTag("Barrel"))
+            {
+                Rigidbody rb = check.GetComponent<Rigidbody>();
+            
+                if (rb != null)
+                {
+                    rb.AddExplosionForce(_explosionForce,transform.position,_radius);
+                }    // 자기 자신은 스킵
+                if (check.gameObject == damage.From)
+                {
+                    continue;
+                }
+                else if(check.GetComponent<Barrel>()._barrelHealth > 0)
+                {
+                    check.GetComponent<Barrel>().TakeDamage(damage);
+                }
             }
 
         }
 
-        _rigidbody.AddTorque(transform.position);
         
     }
     // 사라지기

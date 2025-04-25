@@ -1,4 +1,5 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -35,8 +36,10 @@ public class CameraRotate : MonoBehaviour
             transform.eulerAngles = new Vector3(_rotationY, _rotationX, 0f);
             
            CameraChanger.instance.FPSPosition.eulerAngles = transform.eulerAngles;
-           CameraChanger.instance.QuarterPosition.eulerAngles = new Vector3(0f, 0f, 0f);
         }
-        
+        else if (CameraChanger.instance.Type == CameraType.QuarterCamera)
+        {
+            transform.eulerAngles = new Vector3(45f, -90f, 0f);
+        }
     }
 }

@@ -151,7 +151,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentState: 0
   MoveSpeed: 5
-  Health: 100
+  Health: 50
   FindDistance: 5
   AttackDistance: 2.5
   AttackCooltime: 2
