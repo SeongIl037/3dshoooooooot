@@ -37,8 +37,7 @@ public class RunningEnemy : MonoBehaviour, IDamageable
         
     private void Start()
     { 
-        _healthBar.SetHealth(EnemyHealth);
-        _healthBar.HealthbarRefresh(Health);
+        HealthSet();
         _agent = GetComponent<NavMeshAgent>();
         _agent.speed = MoveSpeed;
         _player = GameObject.FindGameObjectWithTag("Player");
@@ -89,7 +88,6 @@ public class RunningEnemy : MonoBehaviour, IDamageable
             CurrentState = EnemyState.Die;
             Debug.Log($"상태전환 {CurrentState} -> Died");
             StartCoroutine(Die_Coroutine());
-            Health = EnemyHealth;
             return;
         }
         Debug.Log($"상태전환 {CurrentState} -> Damaged");
@@ -152,7 +150,7 @@ public class RunningEnemy : MonoBehaviour, IDamageable
         _agent.isStopped = true;
         _agent.ResetPath();
         yield return new WaitForSeconds(DamagedTime);
-        CurrentState = EnemyState.Trace;
+        Health = EnemyHealth;
 
     }
 
@@ -160,7 +158,14 @@ public class RunningEnemy : MonoBehaviour, IDamageable
     private IEnumerator Die_Coroutine()
     {
         yield return new WaitForSeconds(DeathTime);
+        HealthSet();
+        CurrentState = EnemyState.Trace;
         gameObject.SetActive(false);
         //죽는다.
+    }
+    private void HealthSet()
+    {
+        _healthBar.SetHealth(EnemyHealth);
+        _healthBar.HealthbarRefresh(Health);
     }
 }

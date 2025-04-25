@@ -55,11 +55,9 @@ public class Enemy : MonoBehaviour, IDamageable
         _player = GameObject.FindGameObjectWithTag("Player");
         _characterController = GetComponent<CharacterController>();
         _agent = GetComponent<NavMeshAgent>();
-
-        
-        _healthBar.SetHealth(MaxHealth);
-        _healthBar.HealthbarRefresh(Health);
         _agent.speed = MoveSpeed;
+        
+        HealthSet();
         
         _player = GameObject.FindGameObjectWithTag("Player");
         _characterController = GetComponent<CharacterController>();
@@ -118,7 +116,6 @@ public class Enemy : MonoBehaviour, IDamageable
             CurrentState = EnemyState.Die;
             Debug.Log($"상태전환 {CurrentState} -> Died");
             StartCoroutine(Die_Coroutine());
-            Health = MaxHealth;
             return;
         }
         Debug.Log($"상태전환 {CurrentState} -> Damaged");
@@ -246,6 +243,8 @@ public class Enemy : MonoBehaviour, IDamageable
     private IEnumerator Die_Coroutine()
     {
         yield return new WaitForSeconds(DeathTime);
+        Health = MaxHealth;
+        HealthSet();
         gameObject.SetActive(false);
         //죽는다.
     }
@@ -281,5 +280,11 @@ public class Enemy : MonoBehaviour, IDamageable
         {
             PatrolPoint[i] = LocationData.PatrolLocation[i];
         }
+    }
+
+    private void HealthSet()
+    {
+        _healthBar.SetHealth(MaxHealth);
+        _healthBar.HealthbarRefresh(Health);
     }
 }
