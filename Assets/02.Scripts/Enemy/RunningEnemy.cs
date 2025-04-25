@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-public class RunningEnemy : MonoBehaviour
+public class RunningEnemy : MonoBehaviour, IDamageable
 {
     // 상태를 열거형으로 정의한다.
     public enum EnemyState
@@ -16,11 +16,12 @@ public class RunningEnemy : MonoBehaviour
         Die
     }
 
+    public HPBar _healthBar;
     // 상태를 지정한다.
     public EnemyState CurrentState = EnemyState.Idle;
     public float MoveSpeed = 5f;
     public int Health = 50;
-
+    public int EnemyHealth = 50;
     private GameObject _player;
     private NavMeshAgent _agent;
     private CharacterController _characterController;
@@ -36,6 +37,8 @@ public class RunningEnemy : MonoBehaviour
         
     private void Start()
     { 
+        _healthBar.SetHealth(EnemyHealth);
+        _healthBar.HealthbarRefresh(Health);
         _agent = GetComponent<NavMeshAgent>();
         _agent.speed = MoveSpeed;
         _player = GameObject.FindGameObjectWithTag("Player");
@@ -79,12 +82,14 @@ public class RunningEnemy : MonoBehaviour
         
         Health -= damage.Value;
         Debug.Log(Health);
+        _healthBar.HealthbarRefresh(Health);
         
         if (Health <= 0)
         {
             CurrentState = EnemyState.Die;
             Debug.Log($"상태전환 {CurrentState} -> Died");
             StartCoroutine(Die_Coroutine());
+            Health = EnemyHealth;
             return;
         }
         Debug.Log($"상태전환 {CurrentState} -> Damaged");
@@ -138,6 +143,8 @@ public class RunningEnemy : MonoBehaviour
             Debug.Log("플레이어 공격!");
             // 공격한다.
             _attackTimer = 0;
+            
+            UIManager.instance.PlayerHit();
         }
     }
     private IEnumerator Damaged_Coroutine()
@@ -145,7 +152,6 @@ public class RunningEnemy : MonoBehaviour
         _agent.isStopped = true;
         _agent.ResetPath();
         yield return new WaitForSeconds(DamagedTime);
-        Debug.Log("");
         CurrentState = EnemyState.Trace;
 
     }

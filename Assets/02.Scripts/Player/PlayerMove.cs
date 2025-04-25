@@ -97,7 +97,7 @@ public class PlayerMove : MonoBehaviour
             _dashDirection = Camera.main.transform.forward;
             _dashDirection.y = 0;
             _dashDirection.Normalize();
-            UIManager.instance.StaminaRefresh(_player.Stamina);
+            UIManager.instance.SliderRefresh(UIManager.instance.StaminaBar, _player.Stamina);
             
         }
         

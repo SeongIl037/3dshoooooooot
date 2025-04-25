@@ -3,14 +3,14 @@ using System.Collections;
 using UnityEditor;
 using UnityEngine;
 
-public class Barrel : MonoBehaviour
+public class Barrel : MonoBehaviour,IDamageable
 {   
     private Player _player;
     private int _barrelHealth = 50;
     public GameObject ExplosionVFX;
     private int _explosionDamages = 50;
-    private float _explosionForce = 700;
-    
+    private float _explosionForce = 10;
+    private bool _isExploded = false;    
     // 범위
     private float _radius = 5f;
     private Rigidbody _rigidbody;
@@ -22,6 +22,10 @@ public class Barrel : MonoBehaviour
 
     public void TakeDamage(Damage damage)
     {
+        if (_isExploded)
+        {
+            return;
+        }
         _barrelHealth -= damage.Value;
 
         if (_barrelHealth <= 0)
@@ -35,61 +39,50 @@ public class Barrel : MonoBehaviour
     private void CheckAround()
     {
         // 주변 물체 체크하기
-        Collider[] around = Physics.OverlapSphere(this.transform.position, _radius);
+        Collider[] around = Physics.OverlapSphere(this.transform.position, _radius, ~(1<<10));
         
+        Damage damage = new Damage();
+        damage.Value = _explosionDamages;
+        damage.From = this.gameObject;
+        damage.KnockBack = 20;
         foreach (Collider check in around)
         {
-            Damage damage = new Damage();
-            damage.Value = _explosionDamages;
-            damage.From = this.gameObject;
-            damage.KnockBack = 0;
+            if (check.gameObject == this.gameObject)
+                continue;
             
-            _rigidbody.AddTorque(transform.position);
-            
-            if (check.CompareTag("Player"))
-            {
-                _player.Health -= _explosionDamages;
-                Debug.Log(_player.Health);
-            }
-            else if (check.CompareTag("Enemy"))
-            {
-                check.GetComponent<Enemy>().TakeDamage(damage);
-                Debug.Log(check.GetComponent<Enemy>().Health);
-            }
-            else if (check.CompareTag("RunEnemy"))
-            {
-                check.GetComponent<RunningEnemy>().TakeDamage(damage);
-            }
-            else if (check.CompareTag("Barrel"))
-            {
-                Rigidbody rb = check.GetComponent<Rigidbody>();
-            
-                if (rb != null)
-                {
-                    rb.AddExplosionForce(_explosionForce,transform.position,_radius);
-                }    // 자기 자신은 스킵
-                if (check.gameObject == damage.From)
-                {
-                    continue;
-                }
-                else if(check.GetComponent<Barrel>()._barrelHealth > 0)
-                {
-                    check.GetComponent<Barrel>().TakeDamage(damage);
-                }
-            }
+            IDamageable damageable = check.GetComponent<IDamageable>();
 
+            if (damageable != null)
+            {
+                damageable.TakeDamage(damage);
+            }
+        } 
+        Collider[] drums = Physics.OverlapSphere(this.transform.position, _radius, 1<<10);
+        foreach (Collider drumc in drums)
+        {
+            if (drumc.TryGetComponent(out Barrel barrel))
+            {
+                barrel.Explode();
+            }
         }
-
-        
     }
     // 사라지기
     private IEnumerator DestroyBarrel()
     {
+        _isExploded = true;
+        
         GameObject vfx = Instantiate(ExplosionVFX);
         vfx.transform.position = this.transform.position;
+        
         yield return new WaitForSeconds(5f);
 
         Destroy(gameObject);
+    }
+
+    private void Explode()
+    { 
+        _rigidbody.AddExplosionForce(_explosionForce, transform.position, _radius, 3f, ForceMode.Impulse);
+        _rigidbody.AddTorque(transform.position, ForceMode.Impulse);
     }
     
 }

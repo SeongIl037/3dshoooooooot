@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour,IDamageable
 {
     [SerializeField]
     private PlayerStatSO MoveDatas;
@@ -26,18 +26,21 @@ public class Player : MonoBehaviour
     [Header("stamina")] 
     public float Stamina = 0f;
     public float Health = 100f;
-    
-    
+
+    public void TakeDamage(Damage damage)
+    {
+        Health -= damage.Value;
+    }
     public void StaminaRecovery()
     {
         Stamina += Time.deltaTime;
         Stamina = Mathf.Clamp(Stamina, 0, StaminaMax);
-        UIManager.instance.StaminaRefresh(Stamina);
+        UIManager.instance.SliderRefresh(UIManager.instance.StaminaBar, Stamina);
     }
     public void StaminaDecrease()
     {
         Stamina -= Time.deltaTime;
         Stamina = Mathf.Clamp(Stamina, 0, StaminaMax);
-        UIManager.instance.StaminaRefresh(Stamina);
+        UIManager.instance.SliderRefresh(UIManager.instance.StaminaBar, Stamina);
     }
 }

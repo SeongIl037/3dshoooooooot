@@ -7,7 +7,7 @@ using UnityEngine.AI;
 using UnityEngine.Rendering.UI;
 using Random = System.Random;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDamageable
 {
     // 상태를 열거형으로 정의한다.
     public enum EnemyState
@@ -20,12 +20,14 @@ public class Enemy : MonoBehaviour
         Damaged,
         Die
     }
-
+    public HPBar _healthBar;
+    public Location LocationData;
     public List<Vector3> PatrolPoint = new List<Vector3>();
     // 상태를 지정한다.
     public EnemyState CurrentState = EnemyState.Idle;
     public float MoveSpeed = 3.3f;
     public int Health = 100;
+    public int MaxHealth = 100;
 
     private GameObject _player;
     private CharacterController _characterController;
@@ -50,14 +52,19 @@ public class Enemy : MonoBehaviour
         
     private void Start()
     { 
+        _player = GameObject.FindGameObjectWithTag("Player");
+        _characterController = GetComponent<CharacterController>();
         _agent = GetComponent<NavMeshAgent>();
+
+        
+        _healthBar.SetHealth(MaxHealth);
+        _healthBar.HealthbarRefresh(Health);
         _agent.speed = MoveSpeed;
         
         _player = GameObject.FindGameObjectWithTag("Player");
         _characterController = GetComponent<CharacterController>();
-        _startPosition = transform.position;
-        goalDir = _startPosition;
-        PatrolPoint[0] = _startPosition;
+
+        SetPatrol();
     }
 
     private void Update()
@@ -104,12 +111,14 @@ public class Enemy : MonoBehaviour
         }
         
         Health -= damage.Value;
+        _healthBar.HealthbarRefresh(Health);
         
         if (Health <= 0)
         {
             CurrentState = EnemyState.Die;
             Debug.Log($"상태전환 {CurrentState} -> Died");
             StartCoroutine(Die_Coroutine());
+            Health = MaxHealth;
             return;
         }
         Debug.Log($"상태전환 {CurrentState} -> Damaged");
@@ -117,6 +126,8 @@ public class Enemy : MonoBehaviour
         CurrentState = EnemyState.Damaged;
 
         StartCoroutine(Damaged_Coroutine());
+        
+        
 
     }
     // 0 : 대기
@@ -209,6 +220,7 @@ public class Enemy : MonoBehaviour
             Debug.Log("플레이어 공격!");
             // 공격한다.
             _attackTimer = 0;
+            UIManager.instance.PlayerHit();
         }
         
         
@@ -256,5 +268,18 @@ public class Enemy : MonoBehaviour
         }
         _characterController.Move((goalDir - transform.position).normalized * MoveSpeed * Time.deltaTime);
 
+    }
+
+    private void SetPatrol()
+    {
+        _startPosition = transform.position;
+        
+        goalDir = _startPosition;
+        PatrolPoint[0] = _startPosition;
+        
+        for (int i = 1; i < PatrolPoint.Count; i++)
+        {
+            PatrolPoint[i] = LocationData.PatrolLocation[i];
+        }
     }
 }

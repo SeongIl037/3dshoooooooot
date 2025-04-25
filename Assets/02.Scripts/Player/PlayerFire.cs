@@ -110,32 +110,17 @@ public class PlayerFire : MonoBehaviour
             FireCooldown = 0;
             // 게임 수학 : 선형대수학, 기하학
             UIManager.instance.BulletRefresh(BulletCount,_player.BulletMaxCount);
-            if (hitInfo.collider.gameObject.CompareTag("Enemy"))
+            // 총알을 맞은 친구가 Idamageable 구현체라면..
+            // if(hitInfo.collider.TryGetComponent<IDamageable>(out damagable in IDamageable)) -> IDamagealbe이 있다면
+            IDamageable damageable = hitInfo.collider.gameObject.GetComponent<IDamageable>();
+            if (damageable != null)
             {
-                Enemy enemy = hitInfo.collider.GetComponent<Enemy>();
                 Damage damage = new Damage();
-                damage.Value = 1;
+                damage.Value = 10;
                 damage.From = this.gameObject;
                 damage.KnockBack = 50;
-                enemy.TakeDamage(damage);
-            }
-            else if (hitInfo.collider.gameObject.CompareTag("RunEnemy"))
-            {
-                RunningEnemy ene = hitInfo.collider.GetComponent<RunningEnemy>();
-                Damage damage = new Damage();
-                damage.Value = 10;
-                damage.From = this.gameObject;
-                damage.KnockBack = 0;
-                ene.TakeDamage(damage);
-            }
-            else if (hitInfo.collider.gameObject.CompareTag("Barrel"))
-            {
-                Barrel barrel = hitInfo.collider.GetComponent<Barrel>();
-                Damage damage = new Damage();
-                damage.Value = 10;
-                damage.From = this.gameObject;
-                damage.KnockBack = 0;
-                barrel.TakeDamage(damage);
+                
+                damageable.TakeDamage(damage);
             }
         }
     }
@@ -159,7 +144,7 @@ public class PlayerFire : MonoBehaviour
         UIManager.instance.ThrowBar.SetActive(true);
         ThrowPlusPower += Time.deltaTime;
         ThrowPlusPower = Mathf.Clamp(ThrowPlusPower, 1, _player.ThrowPowerMax);
-        UIManager.instance.ThrowPlusPowerRefresh(ThrowPlusPower);
+        UIManager.instance.SliderRefresh(UIManager.instance.ThrowPowerSlider, ThrowPlusPower);
 
     }
 
