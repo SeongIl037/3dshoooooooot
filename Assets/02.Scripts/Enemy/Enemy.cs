@@ -217,6 +217,13 @@ public class Enemy : MonoBehaviour, IDamageable
             Debug.Log("플레이어 공격!");
             // 공격한다.
             _attackTimer = 0;
+            // 플레이어 체력 감소
+            Damage damage = new Damage();
+            damage.Value = 10;
+            damage.From = this.gameObject;
+            damage.KnockBack = 0;
+            _player.GetComponent<Player>().TakeDamage(damage);
+            // 피격 이펙트
             UIManager.instance.PlayerHit();
         }
         

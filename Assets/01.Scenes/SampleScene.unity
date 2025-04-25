@@ -4136,14 +4136,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aaf7863a77bfdb42af60e9fb4adecf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerHealthSlider: {fileID: 0}
-  HitEffect: {fileID: 1079759808}
-  SubHitEffect: {fileID: 1391773149}
-  BombCount: {fileID: 630055952}
-  ThrowBar: {fileID: 1422587750}
+  PlayerHealthSlider: {fileID: 279653303}
   ThrowPowerSlider: {fileID: 1422587752}
   StaminaBar: {fileID: 665052927}
+  BombCount: {fileID: 630055952}
   BulletCount: {fileID: 1684558196}
+  ThrowBar: {fileID: 1422587750}
+  HitEffect: {fileID: 1079759808}
+  SubHitEffect: {fileID: 1391773149}
   ReloadBar: {fileID: 792639996}
 --- !u!1 &1199623065
 GameObject:

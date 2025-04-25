@@ -30,6 +30,7 @@ public class Player : MonoBehaviour,IDamageable
     public void TakeDamage(Damage damage)
     {
         Health -= damage.Value;
+        UIManager.instance.SliderRefresh(UIManager.instance.PlayerHealthSlider, Health);
     }
     public void StaminaRecovery()
     {
