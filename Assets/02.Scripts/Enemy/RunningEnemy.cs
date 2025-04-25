@@ -150,7 +150,6 @@ public class RunningEnemy : MonoBehaviour, IDamageable
         _agent.isStopped = true;
         _agent.ResetPath();
         yield return new WaitForSeconds(DamagedTime);
-        Health = EnemyHealth;
 
     }
 
@@ -158,8 +157,9 @@ public class RunningEnemy : MonoBehaviour, IDamageable
     private IEnumerator Die_Coroutine()
     {
         yield return new WaitForSeconds(DeathTime);
+        
+        Health = EnemyHealth;
         HealthSet();
-        CurrentState = EnemyState.Trace;
         gameObject.SetActive(false);
         //죽는다.
     }
