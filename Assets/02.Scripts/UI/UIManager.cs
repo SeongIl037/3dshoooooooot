@@ -29,10 +29,18 @@ public class UIManager : Singletone<UIManager>
     public Image SubHitEffect;
     public Image ReloadBar;
 
+    // 게임 시작 중간 끝
+    public TextMeshProUGUI CurrentGameState;
+    private int _stateTimer = 2;
     
     
     // 슬라이더 값 조절 공통 메서드
     public void SliderRefresh(Slider slider, float value)
+    {
+        slider.value = value;
+    }
+    
+    public void HealthSliderRefresh(Slider slider, float value)
     {
         StartCoroutine(SliderRefresh_Coroutine(slider, value));
     }
@@ -90,6 +98,33 @@ public class UIManager : Singletone<UIManager>
             yield return new WaitForSeconds(_subDuration);
         }
 
+    }
+    
+    // 게임 시작 중간 끝 설정
+    public void ReadyGame()
+    {
+        StartCoroutine(ReadyGame_Coroutine());
+    }
+
+    private IEnumerator ReadyGame_Coroutine()
+    {
+        yield return new WaitForSecondsRealtime(_stateTimer);
+        CurrentGameState.text = "Ready.";
+        yield return new WaitForSecondsRealtime(_stateTimer);
+        CurrentGameState.text = "Ready..";
+        yield return new WaitForSecondsRealtime(_stateTimer);
+        CurrentGameState.text = "Ready...";
+        yield return new WaitForSecondsRealtime(_stateTimer);
+        CurrentGameState.text = "Go!";
+        yield return new WaitForSecondsRealtime(1);
+        CurrentGameState.gameObject.SetActive(false);
+        GameManager.instance.RunGame();
+    }
+
+    public void OverGame()
+    {
+        CurrentGameState.text = "Game Over!";
+        CurrentGameState.gameObject.SetActive(true);
     }
 
 }

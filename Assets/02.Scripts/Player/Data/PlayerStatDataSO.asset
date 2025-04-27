@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f452f40879c2749478c1e7f864612eb4, type: 3}
   m_Name: PlayerStatDataSO
   m_EditorClassIdentifier: 
+  Health: 100
   WalkSpeed: 7
   RunSpeed: 12
   JumpPower: 3

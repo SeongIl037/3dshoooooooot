@@ -164,7 +164,9 @@ public class RunningEnemy : MonoBehaviour, IDamageable
         
         Health = EnemyHealth;
         HealthSet();
+        CurrentState = EnemyState.Idle;
         gameObject.SetActive(false);
+       
         //죽는다.
     }
     private void HealthSet()

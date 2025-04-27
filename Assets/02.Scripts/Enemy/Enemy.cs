@@ -252,6 +252,7 @@ public class Enemy : MonoBehaviour, IDamageable
         yield return new WaitForSeconds(DeathTime);
         Health = MaxHealth;
         HealthSet();
+        CurrentState = EnemyState.Idle;
         gameObject.SetActive(false);
         //죽는다.
     }

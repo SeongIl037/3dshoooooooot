@@ -36,17 +36,32 @@ public class PlayerFire : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             Cursor.lockState = CursorLockMode.None; 
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             Cursor.lockState = CursorLockMode.Locked; 
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        else if (Input.GetKeyDown(KeyCode.Alpha6))
         {
             Cursor.lockState = CursorLockMode.Confined; 
+        }
+        
+        if (Input.GetMouseButton(1) && BombCount > 0)
+        {
+            IncreaseThrowPower();
+            
+        }
+        if (Input.GetMouseButtonUp(1) && BombCount > 0)
+        {
+            BombFire();
+        }
+        
+        if (_player.CurrentWeapon != WeaponType.Gun)
+        {
+            return;
         }
         // 발사 쿨타임
         if (FireCooldown < _player.FireCooldown)
@@ -78,15 +93,6 @@ public class PlayerFire : MonoBehaviour
         
         //폭탄
         // 2. 오른쪽 버튼 입력 받기
-        if (Input.GetMouseButton(1) && BombCount > 0)
-        {
-            IncreaseThrowPower();
-            
-        }
-        if (Input.GetMouseButtonUp(1) && BombCount > 0)
-        {
-            BombFire();
-        }
         
     }
 

@@ -3,6 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlayerStat", menuName = "Scriptable Objects/PlayerStat")]
 public class PlayerStatSO : ScriptableObject
 {
+    public int Health;
     public float WalkSpeed;
     public float RunSpeed;
     public float JumpPower;

@@ -1,7 +1,14 @@
 using UnityEngine;
 
+public enum WeaponType
+{
+    Gun,
+    Melee
+    
+}
 public class Player : MonoBehaviour,IDamageable
 {
+    public WeaponType CurrentWeapon;
     [SerializeField]
     private PlayerStatSO MoveDatas;
     // 무브 데이터
@@ -14,6 +21,7 @@ public class Player : MonoBehaviour,IDamageable
     public float DashStamina => MoveDatas.DashStamina;
     public int StaminaMax => MoveDatas.StaminaMax;
     public int MaxJumpCount => MoveDatas.MaxJumpCount;
+    public int Health{get; private set;}
     // 발사 데이터
     [SerializeField]
     private PlayerFireSO FireDatas;
@@ -25,12 +33,38 @@ public class Player : MonoBehaviour,IDamageable
     public float ThrowPowerMax => FireDatas.ThrowPowerMax;
     [Header("stamina")] 
     public float Stamina = 0f;
-    public float Health = 100f;
+    
+    private void Start()
+    {
+        CurrentWeapon = WeaponType.Gun;
+        Health = MoveDatas.Health;
+    }
 
+    private void Update()
+    {
+        WeaponChange();
+    }
+
+    private void WeaponChange()
+    {
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            CurrentWeapon = WeaponType.Gun;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            CurrentWeapon = WeaponType.Melee;
+        }
+    }
     public void TakeDamage(Damage damage)
     {
         Health -= damage.Value;
-        UIManager.instance.SliderRefresh(UIManager.instance.PlayerHealthSlider, Health);
+        UIManager.instance.HealthSliderRefresh(UIManager.instance.PlayerHealthSlider, Health);
+
+        if (Health <= 0)
+        {
+            GameManager.instance.OverGame();
+        }
     }
     public void StaminaRecovery()
     {
