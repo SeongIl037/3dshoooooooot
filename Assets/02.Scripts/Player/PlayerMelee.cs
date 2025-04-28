@@ -29,7 +29,7 @@ public class PlayerMelee : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-             2   SlashEffect.Play();
+                SlashEffect.Play();
                 MeleeAttack();
             }
         }

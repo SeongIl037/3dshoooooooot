@@ -23,10 +23,11 @@ public class PlayerFire : MonoBehaviour
     private Player _player;
     public Lazer Lazer;
 
+    private Animator _animator;
     private void Start()
     {
         _player = GetComponent<Player>();
-     
+        _animator = GetComponentInChildren<Animator>();
         UIManager.instance.BombRefresh(BombCount,_player.MaxBombCount);
         UIManager.instance.BulletRefresh(BulletCount,_player.BulletMaxCount);
 
@@ -75,7 +76,7 @@ public class PlayerFire : MonoBehaviour
             ReloadCancel();
             if (FireCooldown >= _player.FireCooldown && BulletCount > 0)
             {
-                
+                _animator.SetTrigger("Shot");
                 _mainCamera.GetComponent<CameraShake>().ShakeCamera();
                 BulletFire();
             }

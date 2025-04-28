@@ -31,7 +31,7 @@ public class UIManager : Singletone<UIManager>
 
     // 게임 시작 중간 끝
     public TextMeshProUGUI CurrentGameState;
-    private int _stateTimer = 2;
+    private float _stateTimer = 0.1f;
     
     
     // 슬라이더 값 조절 공통 메서드
