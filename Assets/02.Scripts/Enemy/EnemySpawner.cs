@@ -4,7 +4,7 @@ using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public EnemyPool pool;
+    public ObjectPool pool;
     
     private float _spawnTime = 2;
     private float _spawnTimer = 0;
@@ -49,7 +49,7 @@ public class EnemySpawner : MonoBehaviour
         if (_spawnTimer >= _spawnTime)
         {
             _spawnPosition = this.transform.position + new Vector3(Random.Range(-2,2), 0, Random.Range(-2,2));
-            pool.MakeEnemy(_spawnPosition);
+            pool.MakeObject(_spawnPosition);
             _spawnTimer = 0;
         }
     }

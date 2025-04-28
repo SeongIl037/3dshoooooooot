@@ -60,7 +60,8 @@ public class Player : MonoBehaviour,IDamageable
     {
         Health -= damage.Value;
         UIManager.instance.HealthSliderRefresh(UIManager.instance.PlayerHealthSlider, Health);
-
+        // 피격 이펙트
+        UIManager.instance.PlayerHit();
         if (Health <= 0)
         {
             GameManager.instance.OverGame();

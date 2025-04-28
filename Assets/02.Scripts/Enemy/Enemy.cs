@@ -223,8 +223,6 @@ public class Enemy : MonoBehaviour, IDamageable
             damage.From = this.gameObject;
             damage.KnockBack = 0;
             _player.GetComponent<Player>().TakeDamage(damage);
-            // 피격 이펙트
-            UIManager.instance.PlayerHit();
         }
         
         

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerFire : MonoBehaviour
 {
-    public BombPool Pool;
+    public ObjectPool Pool;
     // 3. 발사 위치에 수류탄 생성하기
     // 4. 생성된 수류탄을 카메라 방향으로 물리적인 힘 가하기
     public int BombCount = 3;
@@ -132,7 +132,7 @@ public class PlayerFire : MonoBehaviour
     }
     private void BombFire()
     {
-        GameObject boom = Pool.MakeBomb(FirePosition.transform.position);
+        GameObject boom = Pool.MakeObject(FirePosition.transform.position);
         
         Rigidbody bombRigidBody = boom.GetComponent<Rigidbody>();
         bombRigidBody.AddForce(_mainCamera.transform.forward *  (_player.ThrowPower * ThrowPlusPower), ForceMode.Impulse);

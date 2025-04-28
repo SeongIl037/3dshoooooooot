@@ -10,7 +10,7 @@ public class PlayerMelee : MonoBehaviour
     private bool _canAttack = false;
     private float _timer;
     private Player _player; // 플레이어 무기 종류 받아오기
-
+    public ParticleSystem SlashEffect;
     private void Start()
     {
         _player = GetComponent<Player>();
@@ -29,6 +29,7 @@ public class PlayerMelee : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
+             2   SlashEffect.Play();
                 MeleeAttack();
             }
         }
