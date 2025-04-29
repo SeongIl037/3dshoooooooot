@@ -5,24 +5,31 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     private Player _player;
+
     // 움직임
     private float _moveSpeed = 5f;
     private bool _isRunning = false;
-    [Header("Dash")]
-    public float DashTimer = 0.5f;
+    [Header("Dash")] public float DashTimer = 0.5f;
     private bool _isDashing = false;
+
     private Vector3 _dashDirection;
+
     //점프
     private int _jumpCount = 0;
+
     private bool _isJumping = false;
+
     // 중력
     private const float GRAVITY = -9.8f; // 중력
+
     private float _yVelocity = 0f; // 중력가속도
+
     //벽타기
     private bool _isClimbing = false;
     private CharacterController _characterController;
-    
+
     private Animator _animator;
+
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
@@ -32,29 +39,31 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
+        InjuredMovement();
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
-        
+
         Vector3 dir = new Vector3(horizontal, 0, vertical);
-        
+
         _animator.SetFloat("MoveAmount", dir.magnitude);
-        
+
         dir = dir.normalized;
         // 메인 카메라를 기준으로 방향을 변환한다.
         dir = Camera.main.transform.TransformDirection(dir);
-        
+
         _yVelocity += GRAVITY * Time.deltaTime;
         dir.y = _yVelocity;
         _characterController.Move(dir * _moveSpeed * Time.deltaTime);
-        
-   
+
+
         WallClimb();
         Running();
-        if(_characterController.isGrounded)
+        if (_characterController.isGrounded)
         {
             _jumpCount = 0;
-            Dashing();   
+            Dashing();
         }
+
         Jump();
         StaminaIncrease();
     }
@@ -68,7 +77,7 @@ public class PlayerMove : MonoBehaviour
             _jumpCount += 1;
         }
     }
-    
+
     private void Running()
     {
         if (Input.GetKey(KeyCode.LeftShift) && _player.Stamina > 0)
@@ -79,13 +88,13 @@ public class PlayerMove : MonoBehaviour
         {
             _isRunning = false;
         }
-        
+
         if (_isRunning)
         {
             _moveSpeed = _player.RunSpeed;
             _player.StaminaDecrease();
         }
-        else if(_isRunning == false)
+        else if (_isRunning == false)
         {
             _moveSpeed = _player.WalkSpeed;
         }
@@ -97,7 +106,7 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && _isDashing == false && _player.Stamina > _player.DashStamina)
         {
             _player.Stamina -= _player.DashStamina;
-            
+
             _isDashing = true;
             DashTimer = _player.DashTime;
 
@@ -105,9 +114,9 @@ public class PlayerMove : MonoBehaviour
             _dashDirection.y = 0;
             _dashDirection.Normalize();
             UIManager.instance.SliderRefresh(UIManager.instance.StaminaBar, _player.Stamina);
-            
+
         }
-        
+
         if (_isDashing)
         {
             _characterController.Move(_dashDirection * _player.DashPower * Time.deltaTime);
@@ -121,7 +130,7 @@ public class PlayerMove : MonoBehaviour
 
     private void WallClimb()
     {
-        if (_characterController.collisionFlags == CollisionFlags.Sides )
+        if (_characterController.collisionFlags == CollisionFlags.Sides)
         {
             if (Input.GetButton("Jump") && _player.Stamina > 0)
             {
@@ -134,7 +143,7 @@ public class PlayerMove : MonoBehaviour
                 _yVelocity += GRAVITY;
                 _isClimbing = false;
             }
-        
+
         }
         else
         {
@@ -146,9 +155,18 @@ public class PlayerMove : MonoBehaviour
     {
         if (_isDashing || _isJumping || _isRunning || _isClimbing)
         {
-            return; 
-        } 
+            return;
+        }
+
         _player.StaminaRecovery();
     }
-    
+
+    private void InjuredMovement()
+    {
+        if (_player.Health < 50)
+        {
+            _animator.SetLayerWeight(1,1) ;   
+        }
+    }
+
 }
