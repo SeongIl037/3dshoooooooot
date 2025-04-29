@@ -22,8 +22,14 @@ public class PlayerFire : MonoBehaviour
 
     private Player _player;
     public Lazer Lazer;
-
+    
     private Animator _animator;
+
+    public int ZoomInSize = 15;
+    public int ZoomOutSize = 60;
+    public GameObject UI_SniperZoom;
+    public GameObject UI_Crosshair;
+    private bool _zoomMode = false;
     private void Start()
     {
         _player = GetComponent<Player>();
@@ -50,14 +56,28 @@ public class PlayerFire : MonoBehaviour
             Cursor.lockState = CursorLockMode.Confined; 
         }
         
-        if (Input.GetMouseButton(1) && BombCount > 0)
+        if (Input.GetMouseButtonDown(1))
         {
-            IncreaseThrowPower();
+            // IncreaseThrowPower();
             
+            _zoomMode = !_zoomMode;
+            if (_zoomMode)
+            {
+                UI_SniperZoom.SetActive(true);
+                UI_Crosshair.SetActive(false);
+                _mainCamera.fieldOfView = ZoomInSize;
+            }
+            else
+            {
+                UI_SniperZoom.SetActive(false);
+                UI_Crosshair.SetActive(true);
+                _mainCamera.fieldOfView = ZoomOutSize;
+            }
+
         }
         if (Input.GetMouseButtonUp(1) && BombCount > 0)
         {
-            BombFire();
+            // BombFire();
         }
         
         if (_player.CurrentWeapon != WeaponType.Gun)
