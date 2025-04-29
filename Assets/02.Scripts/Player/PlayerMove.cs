@@ -21,10 +21,12 @@ public class PlayerMove : MonoBehaviour
     //벽타기
     private bool _isClimbing = false;
     private CharacterController _characterController;
+    private Animator _animator;
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
         _player = GetComponent<Player>();
+        _animator = GetComponentInChildren<Animator>();
     }
 
     private void Update()
@@ -33,6 +35,7 @@ public class PlayerMove : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
         
         Vector3 dir = new Vector3(horizontal, 0, vertical);
+        _animator.SetFloat("Move",1f);
         dir = dir.normalized;
         // 메인 카메라를 기준으로 방향을 변환한다.
         dir = Camera.main.transform.TransformDirection(dir);
