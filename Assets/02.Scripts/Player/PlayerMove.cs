@@ -47,7 +47,7 @@ public class PlayerMove : MonoBehaviour
         dir.y = _yVelocity;
         _characterController.Move(dir * _moveSpeed * Time.deltaTime);
         
-        Jump();
+   
         WallClimb();
         Running();
         if(_characterController.isGrounded)
@@ -55,7 +55,7 @@ public class PlayerMove : MonoBehaviour
             _jumpCount = 0;
             Dashing();   
         }
-
+        Jump();
         StaminaIncrease();
     }
 
@@ -64,6 +64,7 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetButtonDown("Jump") && _jumpCount < _player.MaxJumpCount)
         {
             _yVelocity = _player.JumpPower;
+            _animator.SetTrigger("Jump");
             _jumpCount += 1;
         }
     }
