@@ -35,7 +35,7 @@ public class PlayerMove : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
         
         Vector3 dir = new Vector3(horizontal, 0, vertical);
-        _animator.SetFloat("Move",1f);
+        _animator.SetFloat("Move",dir.magnitude);
         dir = dir.normalized;
         // 메인 카메라를 기준으로 방향을 변환한다.
         dir = Camera.main.transform.TransformDirection(dir);
