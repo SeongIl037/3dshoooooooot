@@ -75,9 +75,9 @@ public class PlayerFire : MonoBehaviour
             }
 
         }
-        if (Input.GetMouseButtonUp(1) && BombCount > 0)
+        if (Input.GetMouseButtonUp(1) && _player.CurrentWeapon == WeaponType.Grandae)
         {
-            // BombFire();
+            _animator.SetTrigger("Granade");
         }
         
         if (_player.CurrentWeapon != WeaponType.Gun)

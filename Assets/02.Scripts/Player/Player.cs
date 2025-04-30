@@ -3,7 +3,8 @@ using UnityEngine;
 public enum WeaponType
 {
     Gun,
-    Melee
+    Melee,
+    Grandae
     
 }
 public class Player : MonoBehaviour,IDamageable
@@ -54,6 +55,10 @@ public class Player : MonoBehaviour,IDamageable
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             CurrentWeapon = WeaponType.Melee;
+        }
+        else if(Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            CurrentWeapon = WeaponType.Grandae;
         }
     }
     public void TakeDamage(Damage damage)

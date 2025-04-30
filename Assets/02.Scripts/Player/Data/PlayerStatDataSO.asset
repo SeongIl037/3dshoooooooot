@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerStatDataSO
   m_EditorClassIdentifier: 
   Health: 100
-  WalkSpeed: 7
+  WalkSpeed: 5
   RunSpeed: 12
   JumpPower: 3
   DashPower: 20

@@ -10,10 +10,12 @@ public class PlayerMelee : MonoBehaviour
     private bool _canAttack = false;
     private float _timer;
     private Player _player; // 플레이어 무기 종류 받아오기
+    private Animator _animator;
     public ParticleSystem SlashEffect;
     private void Start()
     {
         _player = GetComponent<Player>();
+        _animator = GetComponentInChildren<Animator>();
     }
 
     private void Update()
@@ -30,6 +32,7 @@ public class PlayerMelee : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 SlashEffect.Play();
+                _animator.SetTrigger("Melee");
                 MeleeAttack();
             }
         }

@@ -9,9 +9,9 @@ public class PlayerMove : MonoBehaviour
     // 움직임
     private float _moveSpeed = 5f;
     private bool _isRunning = false;
-    [Header("Dash")] public float DashTimer = 0.5f;
+    [Header("Dash")] 
+    public float DashTimer = 0.5f;
     private bool _isDashing = false;
-
     private Vector3 _dashDirection;
 
     //점프
@@ -165,7 +165,11 @@ public class PlayerMove : MonoBehaviour
     {
         if (_player.Health < 50)
         {
-            _animator.SetLayerWeight(1,1) ;   
+            _animator.SetLayerWeight(1,0.78f) ;   
+        }
+        else
+        {
+            _animator.SetLayerWeight(1,0);
         }
     }
 
