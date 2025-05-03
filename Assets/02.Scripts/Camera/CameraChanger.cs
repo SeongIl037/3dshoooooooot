@@ -14,11 +14,12 @@ public class CameraChanger : Singletone<CameraChanger>
     public Transform TPSPosition;
     public Transform QuarterPosition;
     public Transform TargetPosition;
+    public Transform Position;
 
     private void Start()
     {
         Type = CameraType.FpsCamera;
-        TargetPosition = FPSPosition;
+        TargetPosition = Position;
     }
 
     private void Update()
@@ -30,7 +31,7 @@ public class CameraChanger : Singletone<CameraChanger>
         if (Input.GetKeyDown(KeyCode.Alpha8))
         {
             Type = CameraType.FpsCamera;
-            TargetPosition = FPSPosition;
+            TargetPosition = Position;
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha9))

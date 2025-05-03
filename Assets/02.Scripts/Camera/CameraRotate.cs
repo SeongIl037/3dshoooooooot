@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 public class CameraRotate : MonoBehaviour
 {
     public float RotationSpeed = 15f;
-    
+    public GameObject Target;
     // 카메라 각도는 0도에서부터 시작한다고 기준을 세운다.
     private float _rotationX = 0f;
     private float _rotationY = 0f;
