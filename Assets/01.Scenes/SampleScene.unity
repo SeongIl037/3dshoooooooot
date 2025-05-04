@@ -6644,6 +6644,7 @@ GameObject:
   - component: {fileID: 1879978741}
   - component: {fileID: 1879978744}
   - component: {fileID: 1879978745}
+  - component: {fileID: 1879978746}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -6804,14 +6805,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f06493172a20e048b94aaf940e51886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Pool: {fileID: 1573246875}
-  BombCount: 3
-  ThrowPlusPower: 4
   BulletCount: 50
   FireCooldown: 0
   Reloading: 0
   FirePosition: {fileID: 1055705333}
-  BombPrefab: {fileID: 7548500849158972106, guid: 884943cf4d5217c4ba34ff72629c69f6, type: 3}
+  BombPrefab: {fileID: 0}
   BulletEffect: {fileID: 1696409711}
   Lazer: {fileID: 919079757}
   ZoomInSize: 15
@@ -6834,6 +6832,23 @@ MonoBehaviour:
   Angle: 30
   MeleeDamage: 20
   SlashEffect: {fileID: 358957490}
+--- !u!114 &1879978746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879978735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6016bf6a6a060594b917814a17551dbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pool: {fileID: 1573246875}
+  BombCount: 3
+  ThrowPlusPower: 0
+  ThrowPosition: {fileID: 841091571}
+  TargetPosition: {fileID: 2074196204}
 --- !u!1001 &1892276798
 PrefabInstance:
   m_ObjectHideFlags: 0

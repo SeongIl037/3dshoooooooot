@@ -3,11 +3,6 @@ using UnityEngine;
 
 public class PlayerFire : MonoBehaviour
 {
-    public ObjectPool Pool;
-    // 3. 발사 위치에 수류탄 생성하기
-    // 4. 생성된 수류탄을 카메라 방향으로 물리적인 힘 가하기
-    public int BombCount = 3;
-    public float ThrowPlusPower;
     public int BulletCount = 50;
     public float FireCooldown = 0.5f;
     public float Reloading = 0;
@@ -34,7 +29,6 @@ public class PlayerFire : MonoBehaviour
     {
         _player = GetComponent<Player>();
         _animator = GetComponentInChildren<Animator>();
-        UIManager.instance.BombRefresh(BombCount,_player.MaxBombCount);
         UIManager.instance.BulletRefresh(BulletCount,_player.BulletMaxCount);
 
         _mainCamera = Camera.main;
@@ -75,11 +69,6 @@ public class PlayerFire : MonoBehaviour
             }
 
         }
-        if (Input.GetMouseButtonUp(1) && _player.CurrentWeapon == WeaponType.Grandae)
-        {
-            _animator.SetTrigger("Granade");
-        }
-        
         if (_player.CurrentWeapon != WeaponType.Gun)
         {
             return;
@@ -151,30 +140,6 @@ public class PlayerFire : MonoBehaviour
             }
         }
     }
-    private void BombFire()
-    {
-        GameObject boom = Pool.MakeObject(FirePosition.transform.position);
-        
-        Rigidbody bombRigidBody = boom.GetComponent<Rigidbody>();
-        bombRigidBody.AddForce(_mainCamera.transform.forward *  (_player.ThrowPower * ThrowPlusPower), ForceMode.Impulse);
-        bombRigidBody.AddTorque(Vector3.one);
-
-        BombCount -= 1;
-        UIManager.instance.BombRefresh(BombCount, _player.MaxBombCount);
-
-        ThrowPlusPower = 0;
-        UIManager.instance.ThrowBar.SetActive(false);
-    }
-
-    private void IncreaseThrowPower()
-    {
-        UIManager.instance.ThrowBar.SetActive(true);
-        ThrowPlusPower += Time.deltaTime;
-        ThrowPlusPower = Mathf.Clamp(ThrowPlusPower, 1, _player.ThrowPowerMax);
-        UIManager.instance.SliderRefresh(UIManager.instance.ThrowPowerSlider, ThrowPlusPower);
-
-    }
-
     private void Reload()
     {
         Reloading += Time.deltaTime;
