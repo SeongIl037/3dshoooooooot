@@ -11,9 +11,9 @@ public class PlayerFire : MonoBehaviour
     // 필요 속성
     // - 발사 위치
     public GameObject FirePosition;
-    public GameObject BombPrefab;
     private Camera _mainCamera;
     public ParticleSystem BulletEffect;
+    public ParticleSystem MuzzleFlash;
 
     private Player _player;
     public Lazer Lazer;
@@ -86,6 +86,7 @@ public class PlayerFire : MonoBehaviour
             if (FireCooldown >= _player.FireCooldown && BulletCount > 0)
             {
                 _animator.SetTrigger("Shot");
+                MuzzleFlash.Play();
                 _mainCamera.GetComponent<CameraShake>().ShakeCamera();
                 BulletFire();
             }

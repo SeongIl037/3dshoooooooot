@@ -6,7 +6,7 @@ public class PlayerMelee : MonoBehaviour
     public float Radius = 3; // 반지름
     public float Angle = 30; //범위
     public int MeleeDamage = 20;
-    private float _attackTime;
+    private float _attackTime = 1f;
     private bool _canAttack = false;
     private float _timer;
     private Player _player; // 플레이어 무기 종류 받아오기

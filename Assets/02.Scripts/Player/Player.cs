@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 public enum WeaponType
 {
@@ -9,7 +10,9 @@ public enum WeaponType
 }
 public class Player : MonoBehaviour,IDamageable
 {
+    public Rig PlayerRig;
     public WeaponType CurrentWeapon;
+    public Animator PlayerMask;
     [SerializeField]
     private PlayerStatSO MoveDatas;
     // 무브 데이터
@@ -51,14 +54,20 @@ public class Player : MonoBehaviour,IDamageable
         if(Input.GetKeyDown(KeyCode.Alpha1))
         {
             CurrentWeapon = WeaponType.Gun;
+            PlayerRig.weight = 1;
+            PlayerMask.SetLayerWeight(3, 0f);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             CurrentWeapon = WeaponType.Melee;
+            PlayerRig.weight = 0;
+            PlayerMask.SetLayerWeight(3, 0.8f);
         }
         else if(Input.GetKeyDown(KeyCode.Alpha3))
         {
             CurrentWeapon = WeaponType.Grandae;
+            PlayerRig.weight = 0;
+            PlayerMask.SetLayerWeight(3, 0.8f);
         }
     }
     public void TakeDamage(Damage damage)
@@ -84,4 +93,5 @@ public class Player : MonoBehaviour,IDamageable
         Stamina = Mathf.Clamp(Stamina, 0, StaminaMax);
         UIManager.instance.SliderRefresh(UIManager.instance.StaminaBar, Stamina);
     }
+    
 }
