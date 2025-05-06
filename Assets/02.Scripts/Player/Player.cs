@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using UnityEngine.Networking;
 
 public enum WeaponType
 {
@@ -10,6 +11,7 @@ public enum WeaponType
 }
 public class Player : MonoBehaviour,IDamageable
 {
+    public float WheelCheck = 0;
     public Rig PlayerRig;
     public WeaponType CurrentWeapon;
     public Animator PlayerMask;
@@ -46,30 +48,73 @@ public class Player : MonoBehaviour,IDamageable
 
     private void Update()
     {
-        WeaponChange();
+        MouseChange();
     }
 
-    private void WeaponChange()
+    public void SetWeapon(WeaponType weapon)
     {
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        CurrentWeapon = weapon;
+
+        switch (weapon)
         {
-            CurrentWeapon = WeaponType.Gun;
-            PlayerRig.weight = 1;
-            PlayerMask.SetLayerWeight(3, 0f);
+            case WeaponType.Gun:
+            {
+                PlayerRig.weight = 1;
+                PlayerMask.SetLayerWeight(3, 0f);
+                break;
+            }
+            case WeaponType.Melee:
+            {
+                PlayerRig.weight = 0;
+                PlayerMask.SetLayerWeight(3, 0.8f);
+                break;
+            }
+            case WeaponType.Grandae:
+            {
+                PlayerRig.weight = 0;
+                PlayerMask.SetLayerWeight(3, 0.8f);
+                break;
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            CurrentWeapon = WeaponType.Melee;
-            PlayerRig.weight = 0;
-            PlayerMask.SetLayerWeight(3, 0.8f);
-        }
-        else if(Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            CurrentWeapon = WeaponType.Grandae;
-            PlayerRig.weight = 0;
-            PlayerMask.SetLayerWeight(3, 0.8f);
-        }
+        
+        UIManager.instance.UIWeaponChange(weapon);
     }
+    // 마우스 휠처리
+    private void MouseChange()
+    {
+        float wheel = Input.GetAxis("Mouse ScrollWheel");
+        WheelCheck -= wheel;
+        WheelCheck = Mathf.Clamp(WheelCheck, 0, 2);
+    }
+    // private void WeaponChange()
+    // {
+    //     if(Input.GetKeyDown(KeyCode.Alpha1) || WheelCheck <= (int)WeaponType.Gun)
+    //     {
+    //         CurrentWeapon = WeaponType.Gun;
+    //         WheelCheck = (int)WeaponType.Gun;
+    //         PlayerRig.weight = 1;
+    //         PlayerMask.SetLayerWeight(3, 0f);
+    //         UIManager.instance.UIWeaponChange(CurrentWeapon);
+    //     }
+    //     else if (Input.GetKeyDown(KeyCode.Alpha2) || WheelCheck <= (int)WeaponType.Melee)
+    //     {
+    //         CurrentWeapon = WeaponType.Melee;
+    //         WheelCheck = (int)WeaponType.Melee;
+    //         PlayerRig.weight = 0;
+    //         PlayerMask.SetLayerWeight(3, 0.8f);
+    //         
+    //         UIManager.instance.UIWeaponChange(CurrentWeapon);
+    //     }
+    //     else if(Input.GetKeyDown(KeyCode.Alpha3) ||  WheelCheck <= (int)WeaponType.Grandae)
+    //     {
+    //         CurrentWeapon = WeaponType.Grandae;
+    //         WheelCheck = (int)WeaponType.Grandae;
+    //         PlayerRig.weight = 0;
+    //         PlayerMask.SetLayerWeight(3, 0.8f);
+    //         
+    //         UIManager.instance.UIWeaponChange(CurrentWeapon);
+    //     }
+    // }
     public void TakeDamage(Damage damage)
     {
         Health -= damage.Value;

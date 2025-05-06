@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Barrel
   - RunEnemy
+  - CoinPool
   layers:
   - Default
   - TransparentFX

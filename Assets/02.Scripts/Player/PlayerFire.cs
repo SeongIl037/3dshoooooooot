@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerFire : MonoBehaviour
@@ -14,7 +15,8 @@ public class PlayerFire : MonoBehaviour
     private Camera _mainCamera;
     public ParticleSystem BulletEffect;
     public ParticleSystem MuzzleFlash;
-
+    // 피 이펙트 생성
+    public ObjectPool BloodEffect;
     private Player _player;
     public Lazer Lazer;
     
@@ -138,7 +140,14 @@ public class PlayerFire : MonoBehaviour
                 damage.KnockBack = 50;
                 
                 damageable.TakeDamage(damage);
+                    
             }
+
+            if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            {
+                BloodEffect.MakeObject(hitInfo.point);
+            }
+            
         }
     }
     private void Reload()

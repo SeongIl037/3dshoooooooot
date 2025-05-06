@@ -22,9 +22,14 @@ public class RunningEnemy : MonoBehaviour, IDamageable
     public float MoveSpeed = 5f;
     public int Health = 50;
     public int EnemyHealth = 50;
+    private MaterialPropertyBlock _block;
+    private int _colorID;
+    public SkinnedMeshRenderer[] ZombieSkinnedMeshRenderers;
+
     private GameObject _player;
     private NavMeshAgent _agent;
     private CharacterController _characterController;
+    private Animator _animator;
     // 거리 관련
     public float FindDistance = 5f;
     public float AttackDistance = 2.5f;
@@ -34,15 +39,20 @@ public class RunningEnemy : MonoBehaviour, IDamageable
     public float DeathTime = 2f;
     public float DamagedTime = 0.5f;
     private float _attackTimer = 0f;
-        
+    private ObjectPool _objectPool;
+    
     private void Start()
     { 
         HealthSet();
+        ZombieSkinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+        _objectPool = GameObject.FindGameObjectWithTag("CoinPool").GetComponent<ObjectPool>();
         _agent = GetComponent<NavMeshAgent>();
         _agent.speed = MoveSpeed;
+        _colorID = Shader.PropertyToID("_BaseColor");
         _player = GameObject.FindGameObjectWithTag("Player");
         _characterController = GetComponent<CharacterController>();
-        
+        _block = new MaterialPropertyBlock();
+        _animator = GetComponentInChildren<Animator>();   
     }
 
     private void Update()
@@ -80,11 +90,13 @@ public class RunningEnemy : MonoBehaviour, IDamageable
         }
         
         Health -= damage.Value;
-        Debug.Log(Health);
+        StartCoroutine(HitFlash());
+        _animator.SetTrigger("Hit");
         _healthBar.HealthbarRefresh(Health);
         
         if (Health <= 0)
         {
+            _animator.SetTrigger("Die");
             CurrentState = EnemyState.Die;
             Debug.Log($"상태전환 {CurrentState} -> Died");
             StartCoroutine(Die_Coroutine());
@@ -99,13 +111,12 @@ public class RunningEnemy : MonoBehaviour, IDamageable
     // 상태 함수들을 구현한다.
     private void Idle()
     {
-        //필요 속성
-        // 1. 플레이어 (위치)
-        // 2. 
+
         if (Vector3.Distance(transform.position, _player.transform.position) < FindDistance)
         {
             Debug.Log("상태전환 : Idle -> Trace");
             CurrentState = EnemyState.Trace;
+            _animator.SetTrigger("IdleToMove");
             return;
         } 
         // 행동 : 가만히 있는다
@@ -117,6 +128,7 @@ public class RunningEnemy : MonoBehaviour, IDamageable
         {
             Debug.Log("상태전환 : Trace -> Attack");
             CurrentState = EnemyState.Attack;
+            _animator.SetTrigger("MoveToAttackDelay");
             return;
         }
         
@@ -132,6 +144,7 @@ public class RunningEnemy : MonoBehaviour, IDamageable
         {
             Debug.Log("상태전환 : Trace -> Attack");
             CurrentState = EnemyState.Trace;
+            _animator.SetTrigger("AttackDelayToMove");
             return;
         }
         
@@ -141,6 +154,7 @@ public class RunningEnemy : MonoBehaviour, IDamageable
             Debug.Log("플레이어 공격!");
             // 공격한다.
             _attackTimer = 0;
+            _animator.SetTrigger("AttackDelayToAttack");
             Damage damage = new Damage();
             damage.Value = 10;
             damage.From = this.gameObject;
@@ -160,11 +174,11 @@ public class RunningEnemy : MonoBehaviour, IDamageable
     
     private IEnumerator Die_Coroutine()
     {
+        CurrentState = EnemyState.Idle;
         yield return new WaitForSeconds(DeathTime);
-        
+        DropCoins();
         Health = EnemyHealth;
         HealthSet();
-        CurrentState = EnemyState.Idle;
         gameObject.SetActive(false);
        
         //죽는다.
@@ -173,5 +187,27 @@ public class RunningEnemy : MonoBehaviour, IDamageable
     {
         _healthBar.SetHealth(EnemyHealth);
         _healthBar.HealthbarRefresh(Health);
+    }
+    private IEnumerator HitFlash()
+    {
+        foreach (SkinnedMeshRenderer skin in ZombieSkinnedMeshRenderers )
+        {
+            skin.GetPropertyBlock(_block);
+            _block.SetColor(_colorID, Color.red);
+            skin.SetPropertyBlock(_block);
+        }
+        yield return new WaitForSeconds(0.2f);
+        
+        foreach (SkinnedMeshRenderer skin in ZombieSkinnedMeshRenderers )
+        {
+            skin.GetPropertyBlock(_block);
+            _block.SetColor(_colorID, Color.white);
+            skin.SetPropertyBlock(_block);
+        }
+    }
+
+    private void DropCoins()
+    {
+        _objectPool.MakeObject(transform.position);
     }
 }

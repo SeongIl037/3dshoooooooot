@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using DG.Tweening;
 using TMPro;
@@ -28,12 +29,11 @@ public class UIManager : Singletone<UIManager>
     public Image HitEffect;
     public Image SubHitEffect;
     public Image ReloadBar;
-
+    public Image[] WeaponIcons;
     // 게임 시작 중간 끝
     public TextMeshProUGUI CurrentGameState;
     private float _stateTimer = 0.1f;
-    
-    
+
     // 슬라이더 값 조절 공통 메서드
     public void SliderRefresh(Slider slider, float value)
     {
@@ -126,5 +126,12 @@ public class UIManager : Singletone<UIManager>
         CurrentGameState.text = "Game Over!";
         CurrentGameState.gameObject.SetActive(true);
     }
-
+    
+    public void UIWeaponChange(WeaponType type)
+    {
+        for (int i = 0; i < WeaponIcons.Length; i++)
+        {
+            WeaponIcons[i].gameObject.SetActive(i == (int)type);
+        }
+    }
 }
