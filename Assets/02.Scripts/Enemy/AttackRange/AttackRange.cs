@@ -11,9 +11,10 @@ public class AttackRange : MonoBehaviour
 
     private void Increase()
     {
-        transform.DOScale(new Vector3(4f, 4f, 4f), 2f).OnComplete(() =>
+        transform.DOScale(new Vector3(7f,7f, 7f), 2f).OnComplete(() =>
         {
             gameObject.SetActive(false);
+            transform.localScale = new Vector3(0, 0, 0);
         });
     }
 }

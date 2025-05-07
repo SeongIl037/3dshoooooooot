@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Experimental.GlobalIllumination;
 
 public class EliteEnemy : MonoBehaviour, IDamageable
 {
@@ -37,6 +38,7 @@ public class EliteEnemy : MonoBehaviour, IDamageable
     private CharacterController _characterController;
     private GameObject _player;
     private NavMeshAgent _agent;
+    public Light[] ExplodeLights;
     // 공격 범위
     public GameObject Range;
     // 타이머
@@ -47,6 +49,7 @@ public class EliteEnemy : MonoBehaviour, IDamageable
     {
         Health = _data.Health;
         Damage = _data.Damage;
+        HealthBar.SetHealth(Health);
         CurrentState = EnemyState.Idle;
     }
 
@@ -99,7 +102,6 @@ public class EliteEnemy : MonoBehaviour, IDamageable
         }
         Health -= damage.Value;
         StartCoroutine(_hit.HitFlash());
-        _animator.SetTrigger("Hit");
         HealthBar.HealthbarRefresh(Health);
         
         if (Health <= 0)
@@ -107,6 +109,8 @@ public class EliteEnemy : MonoBehaviour, IDamageable
             _animator.SetTrigger("Die");
             CurrentState = EnemyState.Die;
             Debug.Log($"상태전환 {CurrentState} -> Died");
+            _agent.isStopped = true;
+            StartCoroutine(Explode());
             // StartCoroutine(Die_Coroutine());
             return;
         }
@@ -123,7 +127,8 @@ public class EliteEnemy : MonoBehaviour, IDamageable
         if (Vector3.Distance(transform.position, _player.transform.position) <= FindDistance)
         {
             CurrentState = EnemyState.Trace;
-            _animator.SetTrigger("IdleToFollow");
+            Debug.Log("Idle -> trace");
+            _animator.SetTrigger("IdleToTrace");
         }
     }
     // player에게 다가옴
@@ -131,16 +136,22 @@ public class EliteEnemy : MonoBehaviour, IDamageable
     {
         if (Vector3.Distance(transform.position, _player.transform.position) <= AttackDistance)
         {
+            Debug.Log("trace -> attack");
             CurrentState = EnemyState.Attack;
             _animator.SetTrigger("TraceToAttack");
+            return;
         }
 
         if (Vector3.Distance(transform.position, _player.transform.position) <= RunDistance)
         {
+            Debug.Log("trace -> run");
             CurrentState = EnemyState.Run;
             _animator.SetTrigger("TraceToRun");
+            return;
         }
-        _characterController.Move(transform.position - _player.transform.position);
+
+        _agent.speed = MoveSpeed;
+        _agent.SetDestination(_player.transform.position);
     }
 
     private void Run()
@@ -149,15 +160,19 @@ public class EliteEnemy : MonoBehaviour, IDamageable
         {
             CurrentState = EnemyState.Attack;
             _animator.SetTrigger("RunToAttack");
+            Debug.Log("run -> Attack");
+            return;
         }
 
         if (Vector3.Distance(transform.position, _player.transform.position) > RunDistance)
         {
             CurrentState = EnemyState.Trace;
             _animator.SetTrigger("RunToTrace");
+            Debug.Log("run -> trace");
+            return;
         }
         _agent.speed = RunSpeed;
-        _characterController.Move(transform.position - _player.transform.position);
+        _agent.SetDestination(_player.transform.position);
     }
     // 사정거리 안에 들어오면 범위 공격을 함
     private void Attack()
@@ -172,7 +187,9 @@ public class EliteEnemy : MonoBehaviour, IDamageable
     {
         _isAttack = true;
         _agent.isStopped = true;
-        Instantiate(Range);
+        yield return new WaitForSeconds(1f);
+        _animator.SetTrigger("Attack");
+        Range.SetActive(true);
         Range.transform.position = _player.transform.position;
         yield return new WaitForSeconds(AttackCooltime);
         CurrentState = EnemyState.Trace;
@@ -187,10 +204,34 @@ public class EliteEnemy : MonoBehaviour, IDamageable
     // 맞으면 제자리에 잠시 멈춤 (넉백되지 않음)
     private void Hit()
     {
+        _animator.SetTrigger("Hit");
+        StartCoroutine(Hit_Coroutine());
+    }
 
+    private IEnumerator Hit_Coroutine()
+    {
+        _agent.isStopped = true;
+        yield return new WaitForSeconds(0.2f);
+        _agent.isStopped = false;
+        CurrentState = EnemyState.Trace;
     }
     private void DropCoins()
     {
         
+    }
+
+    private IEnumerator Explode()
+    {
+        yield return new WaitForSeconds(1f);
+        for (int i = 0; i < 20; i++)
+        {
+            for (int j = 0; j < ExplodeLights.Length; j++)
+            {
+                ExplodeLights[j].range += 0.5f;
+            }
+            yield return new WaitForSeconds(0.2f);
+        }
+        
+        gameObject.SetActive(false);
     }
 }
