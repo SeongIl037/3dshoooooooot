@@ -103,6 +103,7 @@ GameObject:
   - component: {fileID: 9024685368781319717}
   - component: {fileID: 1038882227917279143}
   - component: {fileID: 4879144184365825181}
+  - component: {fileID: 3471225563421734184}
   m_Layer: 8
   m_Name: RunningEnemy
   m_TagString: RunEnemy
@@ -245,12 +246,24 @@ MonoBehaviour:
   MoveSpeed: 5
   Health: 50
   EnemyHealth: 50
-  ZombieSkinnedMeshRenderers: []
   FindDistance: 5
   AttackDistance: 2.5
   AttackCooltime: 2
   DeathTime: 2
   DamagedTime: 0.5
+--- !u!114 &3471225563421734184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2621914733978468470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c8f3de90b56feb48b986d719648228b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ZombieSkinnedMeshRenderers: []
 --- !u!1 &3887966628896321762
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,15 +24,13 @@ public class Enemy : MonoBehaviour, IDamageable
     public HPBar _healthBar;
     public Location LocationData;
     public List<Vector3> PatrolPoint = new List<Vector3>();
+    private EnemyHit _hit;
+    
     // 상태를 지정한다.
     public EnemyState CurrentState = EnemyState.Idle;
     public float MoveSpeed = 3.3f;
     public int Health = 100;
     public int MaxHealth = 100;
-    private MaterialPropertyBlock _block;
-    private int _colorID;
-    public SkinnedMeshRenderer[] ZombieSkinnedMeshRenderers;
-    
     private GameObject _player;
     private CharacterController _characterController;
     private NavMeshAgent _agent;
@@ -55,15 +53,13 @@ public class Enemy : MonoBehaviour, IDamageable
     private float _patrolTimer = 0f;
     private ObjectPool _objectPool;
     private void Start()
-    { 
+    {
+        _hit = GetComponent<EnemyHit>();
         _objectPool = GameObject.FindGameObjectWithTag("CoinPool").GetComponent<ObjectPool>();
         _characterController = GetComponent<CharacterController>();
         _agent = GetComponent<NavMeshAgent>();
         _agent.speed = MoveSpeed;
         _animator = GetComponentInChildren<Animator>();
-        _block = new MaterialPropertyBlock();
-        _colorID = Shader.PropertyToID("_BaseColor");
-        ZombieSkinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
         HealthSet();
         _player = GameObject.FindGameObjectWithTag("Player");
         _characterController = GetComponent<CharacterController>();
@@ -113,7 +109,7 @@ public class Enemy : MonoBehaviour, IDamageable
             return;
         }
         Health -= damage.Value;
-        StartCoroutine(HitFlash());
+        StartCoroutine(_hit.HitFlash());
         _animator.SetTrigger("Hit");
         _healthBar.HealthbarRefresh(Health);
         
@@ -308,23 +304,6 @@ public class Enemy : MonoBehaviour, IDamageable
         _healthBar.HealthbarRefresh(Health);
     }
 
-    private IEnumerator HitFlash()
-    {
-        foreach (SkinnedMeshRenderer skin in ZombieSkinnedMeshRenderers )
-        {
-            skin.GetPropertyBlock(_block);
-            _block.SetColor(_colorID, Color.red);
-            skin.SetPropertyBlock(_block);
-        }
-        yield return new WaitForSeconds(0.2f);
-        
-        foreach (SkinnedMeshRenderer skin in ZombieSkinnedMeshRenderers )
-        {
-            skin.GetPropertyBlock(_block);
-            _block.SetColor(_colorID, Color.white);
-            skin.SetPropertyBlock(_block);
-        }
-    }
 
     private void DropCoins()
     {

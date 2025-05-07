@@ -22,9 +22,7 @@ public class RunningEnemy : MonoBehaviour, IDamageable
     public float MoveSpeed = 5f;
     public int Health = 50;
     public int EnemyHealth = 50;
-    private MaterialPropertyBlock _block;
-    private int _colorID;
-    public SkinnedMeshRenderer[] ZombieSkinnedMeshRenderers;
+    private EnemyHit _hit;
 
     private GameObject _player;
     private NavMeshAgent _agent;
@@ -44,14 +42,12 @@ public class RunningEnemy : MonoBehaviour, IDamageable
     private void Start()
     { 
         HealthSet();
-        ZombieSkinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+        _hit = GetComponent<EnemyHit>();
         _objectPool = GameObject.FindGameObjectWithTag("CoinPool").GetComponent<ObjectPool>();
         _agent = GetComponent<NavMeshAgent>();
         _agent.speed = MoveSpeed;
-        _colorID = Shader.PropertyToID("_BaseColor");
         _player = GameObject.FindGameObjectWithTag("Player");
         _characterController = GetComponent<CharacterController>();
-        _block = new MaterialPropertyBlock();
         _animator = GetComponentInChildren<Animator>();   
     }
 
@@ -90,7 +86,7 @@ public class RunningEnemy : MonoBehaviour, IDamageable
         }
         
         Health -= damage.Value;
-        StartCoroutine(HitFlash());
+        StartCoroutine(_hit.HitFlash());
         _animator.SetTrigger("Hit");
         _healthBar.HealthbarRefresh(Health);
         
@@ -188,24 +184,6 @@ public class RunningEnemy : MonoBehaviour, IDamageable
         _healthBar.SetHealth(EnemyHealth);
         _healthBar.HealthbarRefresh(Health);
     }
-    private IEnumerator HitFlash()
-    {
-        foreach (SkinnedMeshRenderer skin in ZombieSkinnedMeshRenderers )
-        {
-            skin.GetPropertyBlock(_block);
-            _block.SetColor(_colorID, Color.red);
-            skin.SetPropertyBlock(_block);
-        }
-        yield return new WaitForSeconds(0.2f);
-        
-        foreach (SkinnedMeshRenderer skin in ZombieSkinnedMeshRenderers )
-        {
-            skin.GetPropertyBlock(_block);
-            _block.SetColor(_colorID, Color.white);
-            skin.SetPropertyBlock(_block);
-        }
-    }
-
     private void DropCoins()
     {
         _objectPool.MakeObject(transform.position);
