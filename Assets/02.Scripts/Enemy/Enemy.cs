@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour, IDamageable
         Damaged,
         Die
     }
-    public HPBar _healthBar;
+    public HPBar HealthBar;
     public Location LocationData;
     public List<Vector3> PatrolPoint = new List<Vector3>();
     private EnemyHit _hit;
@@ -92,6 +92,11 @@ public class Enemy : MonoBehaviour, IDamageable
                 Atttck();
                 break;
             }
+            case EnemyState.Die:
+            {
+                Die();
+                break;
+            }
             case EnemyState.Patrol:
             {
                 Patrol();
@@ -111,7 +116,7 @@ public class Enemy : MonoBehaviour, IDamageable
         Health -= damage.Value;
         StartCoroutine(_hit.HitFlash());
         _animator.SetTrigger("Hit");
-        _healthBar.HealthbarRefresh(Health);
+        HealthBar.HealthbarRefresh(Health);
         
         if (Health <= 0)
         {
@@ -191,8 +196,8 @@ public class Enemy : MonoBehaviour, IDamageable
             CurrentState = EnemyState.Idle;
             _animator.SetTrigger("MoveToIdle");
             return;
-        
         }
+        
         if (Vector3.Distance(transform.position, _player.transform.position) < FindDistance)
         {
             Debug.Log("상태전환 : Return -> Trace");
@@ -253,6 +258,10 @@ public class Enemy : MonoBehaviour, IDamageable
     CurrentState = EnemyState.Trace;
     }
 
+    private void Die()
+    {
+        _agent.isStopped = true;
+    }
     
     private IEnumerator Die_Coroutine()
     {
@@ -300,8 +309,8 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void HealthSet()
     {
-        _healthBar.SetHealth(MaxHealth);
-        _healthBar.HealthbarRefresh(Health);
+        HealthBar.SetHealth(MaxHealth);
+        HealthBar.HealthbarRefresh(Health);
     }
 
 

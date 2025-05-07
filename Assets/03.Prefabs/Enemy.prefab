@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d76dcf77a2570341babf0d32280c516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _healthBar: {fileID: 2267105168659621048}
+  HealthBar: {fileID: 2267105168659621048}
   LocationData: {fileID: 11400000, guid: efd6780b45798ea44855896989546550, type: 2}
   PatrolPoint:
   - {x: 0, y: 0, z: 0}
