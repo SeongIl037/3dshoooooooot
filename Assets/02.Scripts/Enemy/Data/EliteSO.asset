@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 4
   RunSpeed: 10
-  Health: 1000
+  Health: 1
   Damage: 80
-  MaxHealth: 1000
+  MaxHealth: 1
   FindDistance: 10
   AttackDistance: 1
   AttackCooltime: 2

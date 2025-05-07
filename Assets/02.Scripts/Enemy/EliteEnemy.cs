@@ -39,6 +39,7 @@ public class EliteEnemy : MonoBehaviour, IDamageable
     private GameObject _player;
     private NavMeshAgent _agent;
     public Light[] ExplodeLights;
+    public ParticleSystem[] ExplodeParticles;
     // 공격 범위
     public GameObject Range;
     // 타이머
@@ -229,9 +230,14 @@ public class EliteEnemy : MonoBehaviour, IDamageable
             {
                 ExplodeLights[j].range += 0.5f;
             }
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.1f);
         }
-        
+
+        for (int i = 0; i < ExplodeParticles.Length; i++)
+        {
+            ExplodeParticles[i].Play();
+        }
+        yield return new WaitForSeconds(1f);
         gameObject.SetActive(false);
     }
 }
