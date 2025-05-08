@@ -16979,13 +16979,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 19
-  m_Radius: 1.88
+  m_Height: 17.62
+  m_Radius: 2.2
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 8.39, z: 0}
+  m_Center: {x: 0, y: 8.75, z: 0}
 --- !u!23 &1382327409
 MeshRenderer:
   m_ObjectHideFlags: 0
