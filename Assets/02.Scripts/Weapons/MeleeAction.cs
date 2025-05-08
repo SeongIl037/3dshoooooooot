@@ -9,7 +9,6 @@ public class MeleeAction : MonoBehaviour
     private float _start = -70f;
     private float _end = 30f;
     private float _actionSpeed = 0.5f;
-    private float _actionTimer = 0;
 
     private void Start()
     {

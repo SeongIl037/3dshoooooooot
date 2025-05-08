@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Experimental.GlobalIllumination;
+using Collider = UnityEngine.Collider;
 
 public class EliteEnemy : MonoBehaviour, IDamageable
 {
@@ -26,8 +27,8 @@ public class EliteEnemy : MonoBehaviour, IDamageable
     
     // 변동 값
     public int Health { get; private set; }
-    public int Damage { get; private set; }
-    public float RunDistance { get; private set; } = 5f;
+    public int AttackDamage { get; private set; }
+    public float RunDistance { get; private set; } = 10f;
     private bool _isAttack = false;
     // 현재 상태
     public EnemyState CurrentState;
@@ -35,13 +36,13 @@ public class EliteEnemy : MonoBehaviour, IDamageable
     private EnemyHit _hit;
     private Animator _animator;
     public HPBar HealthBar;
-    private CharacterController _characterController;
     private GameObject _player;
     private NavMeshAgent _agent;
     public Light[] ExplodeLights;
     public ParticleSystem[] ExplodeParticles;
     // 공격 범위
     public GameObject Range;
+    public float ExplodeRadius = 10;
     // 타이머
     private float _attackTimer;
     
@@ -49,7 +50,7 @@ public class EliteEnemy : MonoBehaviour, IDamageable
     private void OnEnable()
     {
         Health = _data.Health;
-        Damage = _data.Damage;
+        AttackDamage = _data.Damage;
         HealthBar.SetHealth(Health);
         CurrentState = EnemyState.Idle;
     }
@@ -58,7 +59,6 @@ public class EliteEnemy : MonoBehaviour, IDamageable
     {
         _hit = GetComponent<EnemyHit>();
         _animator = GetComponentInChildren<Animator>();
-        _characterController = GetComponent<CharacterController>();
         _player = GameObject.FindGameObjectWithTag("Player");
         _agent = GetComponent<NavMeshAgent>();
         _agent.speed = MoveSpeed;
@@ -237,7 +237,20 @@ public class EliteEnemy : MonoBehaviour, IDamageable
         {
             ExplodeParticles[i].Play();
         }
+
+        Collider[] hits = Physics.OverlapSphere(transform.position, ExplodeRadius);
+        
+        foreach (Collider hit in hits)
+        {
+            Damage damage = new Damage();
+            damage.Value = AttackDamage;
+            if (hit.TryGetComponent<IDamageable>(out IDamageable damageable))
+            {
+                damageable.TakeDamage(damage);
+            }
+        }
         yield return new WaitForSeconds(1f);
         gameObject.SetActive(false);
     }
+    
 }

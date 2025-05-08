@@ -6,7 +6,7 @@ public class EnemyAttackEvent : MonoBehaviour
 
     public void AttackEvent()
     {
-        MyEnemy.Atttck();
+        MyEnemy.Attack();
         Debug.Log("플레이어 공격");
     }
 }

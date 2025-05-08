@@ -10,7 +10,7 @@ public class CoinSingle : MonoBehaviour
     private float _amplitute = 0.2f;
     private float _frequency = 0.2f;
     private float _coinDistance = 3f;
-    private float _coinSpeed = 5f;
+    private float _coinSpeed = 10f;
     private bool _moving = false;
     private void Start()
     {

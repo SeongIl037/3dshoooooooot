@@ -89,7 +89,7 @@ public class Enemy : MonoBehaviour, IDamageable
             }
             case EnemyState.Attack:
             {
-                Atttck();
+                Attack();
                 break;
             }
             case EnemyState.Die:
@@ -212,7 +212,7 @@ public class Enemy : MonoBehaviour, IDamageable
         _agent.SetDestination(_startPosition);
     }
 
-    public void Atttck()
+    public void Attack()
     {
         if (Vector3.Distance(transform.position, _player.transform.position) >= AttackDistance)
         {
@@ -238,7 +238,6 @@ public class Enemy : MonoBehaviour, IDamageable
             damage.KnockBack = 0;
             _player.GetComponent<Player>().TakeDamage(damage);
         }
-        
         
     }
     private IEnumerator Damaged_Coroutine()
