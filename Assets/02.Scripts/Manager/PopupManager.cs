@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public enum EPopupType
@@ -11,7 +13,7 @@ public class PopupManager : Singletone<PopupManager>
 {
     [Header("팝업 UI 참조")] 
     public List<UI_Popup> Popups;
-    private List<UI_Popup> _openedPopups = new List<UI_Popup>();
+    private Stack<UI_Popup> _openedPopups = new Stack<UI_Popup>();
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -20,11 +22,11 @@ public class PopupManager : Singletone<PopupManager>
             {
                 while (true)
                 {
-                    bool opened = _openedPopups[_openedPopups.Count - 1].isActiveAndEnabled;
-                    _openedPopups[_openedPopups.Count - 1].Close();
-                    _openedPopups.RemoveAt(_openedPopups.Count - 1);
-
-                    if (opened || _openedPopups.Count == 0)
+                    UI_Popup popup = _openedPopups.Pop();
+                    bool opened = popup.isActiveAndEnabled;
+                    popup.Close();
+                    
+                    if (opened || _openedPopups.Peek() == null)
                     {
                         break;
                     }
@@ -48,7 +50,7 @@ public class PopupManager : Singletone<PopupManager>
             if (popup.name == popupName)
             {
                 popup.Open(closeCallback);
-                _openedPopups.Add(popup);
+                _openedPopups.Push(popup);
                 break;
             }
         }
