@@ -30,6 +30,7 @@ public class UIManager : Singletone<UIManager>
     public Image SubHitEffect;
     public Image ReloadBar;
     public Image[] WeaponIcons;
+    public Image PausePopup;
     // 게임 시작 중간 끝
     public TextMeshProUGUI CurrentGameState;
     private float _stateTimer = 0.1f;
@@ -133,5 +134,10 @@ public class UIManager : Singletone<UIManager>
         {
             WeaponIcons[i].gameObject.SetActive(i == (int)type);
         }
+    }
+
+    public void UI_OptionPopup()
+    {
+        PausePopup.gameObject.SetActive(true);
     }
 }

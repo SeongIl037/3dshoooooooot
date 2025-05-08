@@ -8,6 +8,7 @@ public class GameManager : Singletone<GameManager>
     {
         Ready,
         Run,
+        Pause,
         Over
         
     }
@@ -23,6 +24,11 @@ public class GameManager : Singletone<GameManager>
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            _gameState = GameState.Pause;
+        }
+        
         switch (_gameState)
         {
             case GameState.Ready:
@@ -30,6 +36,9 @@ public class GameManager : Singletone<GameManager>
                 break;
             case GameState.Run:
                 RunGame();
+                break;
+            case GameState.Pause :
+                Pause();
                 break;
             case GameState.Over:
                 OverGame();
@@ -78,5 +87,11 @@ public class GameManager : Singletone<GameManager>
         UIManager.instance.OverGame();
         Time.timeScale = 0;
     }
-    
+
+    private void Pause()
+    {
+        UIManager.instance.UI_OptionPopup();
+        //옵션 팝업을 활성화한다.
+        Time.timeScale = 0;
+    }
 }
