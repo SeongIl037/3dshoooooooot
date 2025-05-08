@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GameManager : Singletone<GameManager>
 {
@@ -15,7 +17,6 @@ public class GameManager : Singletone<GameManager>
     private bool _gameStart = false;
     private float _gameOverDuration = 20f;
     private GameState _gameState = GameState.Ready;
-
     
     private void Start()
     {
@@ -24,11 +25,6 @@ public class GameManager : Singletone<GameManager>
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            _gameState = GameState.Pause;
-        }
-        
         switch (_gameState)
         {
             case GameState.Ready:
@@ -36,9 +32,6 @@ public class GameManager : Singletone<GameManager>
                 break;
             case GameState.Run:
                 RunGame();
-                break;
-            case GameState.Pause :
-                Pause();
                 break;
             case GameState.Over:
                 OverGame();
@@ -88,10 +81,34 @@ public class GameManager : Singletone<GameManager>
         Time.timeScale = 0;
     }
 
-    private void Pause()
+    public void Pause()
     {
-        UIManager.instance.UI_OptionPopup();
+        PopupManager.instance.Open(EPopupType.UI_OptionPopup,closeCallback: Continue);
+        _gameState = GameState.Pause;
+        Cursor.lockState = CursorLockMode.None;
         //옵션 팝업을 활성화한다.
         Time.timeScale = 0;
     }
+    public void Continue()
+    {
+        _gameState = GameState.Run;
+        Cursor.lockState = CursorLockMode.Locked;
+        //옵션 팝업을 활성화한다.
+        Time.timeScale = 1;
+        
+    }
+
+    public void Restart()
+    {
+        _gameState = GameState.Run;
+        Time.timeScale = 1;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        // 보고 있는 씬의 번호를 가져오는 방법
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentScene);
+        // 다시 시작을 했더니 게임이 망가지는 경우가 있다
+        // 싱글톤일 경우
+    }
+    
 }

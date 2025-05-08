@@ -14,5 +14,6 @@ public class Singletone<T> : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        DontDestroyOnLoad(gameObject);
     }
 }
