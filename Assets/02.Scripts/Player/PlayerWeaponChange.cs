@@ -5,6 +5,8 @@ public class PlayerWeaponChange : MonoBehaviour
 {
     private Player _player;
     private int _weaponLength = 3;
+    public GameObject Gun;
+    public GameObject Knife;
     private void Start()
     {
         _player = GetComponent<Player>();
@@ -20,10 +22,14 @@ public class PlayerWeaponChange : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             _player.SetWeapon(WeaponType.Gun);
+            Gun.SetActive(true);
+            Knife.SetActive(false);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             _player.SetWeapon(WeaponType.Melee);
+            Gun.SetActive(false);
+            Knife.SetActive(true);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
