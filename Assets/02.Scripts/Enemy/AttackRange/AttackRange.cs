@@ -4,33 +4,35 @@ using DG.Tweening;
 public class AttackRange : MonoBehaviour
 {
     public GameObject Explode;
+    private GameObject _player;
+    public GameObject Range;
     private EliteEnemy Elite;
     private float _attackRange = 7f;
-    private void OnEnable()
-    {
-        Increase();
-    }
-
+    private Vector3 _rangePosition;
+    // 엘리트 몬스터의 공격력을 받아오기 위함
     private void Start()
     {
         Elite = GetComponentInParent<EliteEnemy>();
+        _player = GameObject.FindGameObjectWithTag("Player");
     }
-
-    private void Increase()
+    // 범위 표시하기
+    private void MakeAttackRange()
     {
-        transform.DOScale(new Vector3(10,10,10), 2f).OnComplete(() =>
+        GameObject range = Instantiate(Range);
+        range.transform.position = _player.transform.position;
+        _rangePosition = range.transform.position;
+        range.transform.DOScale(new Vector3(10, 10, 10), 2f).OnComplete(()=>
         {
-            MakeEffect();
-            Attack();
-            transform.localScale = new Vector3(0, 0, 0);
-            gameObject.SetActive(false);
+            range.SetActive(false);
         });
     }
+    // 범위 내 터지는 효과 넣기
     private void MakeEffect()
     {
         GameObject explode = Instantiate(Explode);
-        explode.transform.position = transform.position;
+        explode.transform.position = _rangePosition;
     }
+    // 데미지 받게 만들기
     private void Attack()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, _attackRange, ~(1<<8));
@@ -44,6 +46,7 @@ public class AttackRange : MonoBehaviour
                 damageable.TakeDamage(damage);
             }
         }
+        MakeEffect();
     }
     
 }

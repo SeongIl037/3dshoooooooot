@@ -11,31 +11,34 @@ public class PlayerBoom : MonoBehaviour
     public Transform ThrowPosition;
     public Transform TargetPosition;
     
-    
     private Animator _animator;
     private Player _player;
     private void Start()
     {
-        _player = GetComponent<Player>();
-        _animator = GetComponentInChildren<Animator>();
+        _player = GetComponentInParent<Player>();
+        _animator = GetComponent<Animator>();
         UIManager.instance.BombRefresh(BombCount,_player.MaxBombCount);
     }
 
     private void Update()
     {
-        if (_player.CurrentWeapon != WeaponType.Grandae)
+        if (_player.CurrentWeapon != WeaponType.Grandae || BombCount <= 0)
         {
             return;
         }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            _animator.SetTrigger("Granade");
+        }
         if (Input.GetMouseButton(0))
         {
-            IncreaseThrowPower();            
+            IncreaseThrowPower();
         }
         
         if (Input.GetMouseButtonUp(0))
         {
-            BombFire();
-            _animator.SetTrigger("Granade");
+            _animator.SetTrigger("GranadeToIdle");
         }
     }
     private void BombFire()

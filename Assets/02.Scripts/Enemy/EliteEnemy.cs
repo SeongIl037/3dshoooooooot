@@ -41,7 +41,6 @@ public class EliteEnemy : MonoBehaviour, IDamageable
     public Light[] ExplodeLights;
     public ParticleSystem[] ExplodeParticles;
     // 공격 범위
-    public GameObject Range;
     public float ExplodeRadius = 10;
     // 타이머
     private float _attackTimer;
@@ -190,8 +189,6 @@ public class EliteEnemy : MonoBehaviour, IDamageable
         _agent.isStopped = true;
         yield return new WaitForSeconds(1f);
         _animator.SetTrigger("Attack");
-        Range.SetActive(true);
-        Range.transform.position = _player.transform.position;
         yield return new WaitForSeconds(AttackCooltime);
         CurrentState = EnemyState.Trace;
         _agent.isStopped = false;

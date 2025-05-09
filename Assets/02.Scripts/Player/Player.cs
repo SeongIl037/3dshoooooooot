@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
-using UnityEngine.Networking;
 
 public enum WeaponType
 {

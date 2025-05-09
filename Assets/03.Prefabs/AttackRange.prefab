@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5373617952435682375}
   - component: {fileID: 3863720152144219155}
-  - component: {fileID: 3581617357143216503}
   m_Layer: 0
   m_Name: AttackRange
   m_TagString: Untagged
@@ -52,21 +51,8 @@ MonoBehaviour:
   m_EndAngleFade: 180
   m_UVScale: {x: 1, y: 1}
   m_UVBias: {x: 0, y: 0}
-  m_DecalLayerMask: 128
+  m_DecalLayerMask: 256
   m_ScaleMode: 1
   m_Offset: {x: 0, y: 0, z: 0.5}
   m_Size: {x: 1, y: 1, z: 1}
   m_FadeFactor: 1
---- !u!114 &3581617357143216503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8582707824422457310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8bcbe3f37ed0e142beda5ffd622cd22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Explode: {fileID: 100008, guid: 8f611da60097c85438a2947021f045cf, type: 3}
