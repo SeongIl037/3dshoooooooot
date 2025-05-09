@@ -39,7 +39,7 @@ public class Player : MonoBehaviour,IDamageable
     public float ThrowPowerMax => FireDatas.ThrowPowerMax;
     [Header("stamina")] 
     public float Stamina = 0f;
-    
+
     private void Start()
     {
         CurrentWeapon = WeaponType.Gun;
@@ -86,35 +86,7 @@ public class Player : MonoBehaviour,IDamageable
         WheelCheck -= wheel;
         WheelCheck = Mathf.Clamp(WheelCheck, 0, 2);
     }
-    // private void WeaponChange()
-    // {
-    //     if(Input.GetKeyDown(KeyCode.Alpha1) || WheelCheck <= (int)WeaponType.Gun)
-    //     {
-    //         CurrentWeapon = WeaponType.Gun;
-    //         WheelCheck = (int)WeaponType.Gun;
-    //         PlayerRig.weight = 1;
-    //         PlayerMask.SetLayerWeight(3, 0f);
-    //         UIManager.instance.UIWeaponChange(CurrentWeapon);
-    //     }
-    //     else if (Input.GetKeyDown(KeyCode.Alpha2) || WheelCheck <= (int)WeaponType.Melee)
-    //     {
-    //         CurrentWeapon = WeaponType.Melee;
-    //         WheelCheck = (int)WeaponType.Melee;
-    //         PlayerRig.weight = 0;
-    //         PlayerMask.SetLayerWeight(3, 0.8f);
-    //         
-    //         UIManager.instance.UIWeaponChange(CurrentWeapon);
-    //     }
-    //     else if(Input.GetKeyDown(KeyCode.Alpha3) ||  WheelCheck <= (int)WeaponType.Grandae)
-    //     {
-    //         CurrentWeapon = WeaponType.Grandae;
-    //         WheelCheck = (int)WeaponType.Grandae;
-    //         PlayerRig.weight = 0;
-    //         PlayerMask.SetLayerWeight(3, 0.8f);
-    //         
-    //         UIManager.instance.UIWeaponChange(CurrentWeapon);
-    //     }
-    // }
+ 
     public void TakeDamage(Damage damage)
     {
         Health -= damage.Value;

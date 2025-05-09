@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerWeaponChange : MonoBehaviour
 {
     private Player _player;
-    private int _weaponLength = 3;
+    private int _weaponLength =3;
     public GameObject Gun;
     public GameObject Knife;
     private void Start()
