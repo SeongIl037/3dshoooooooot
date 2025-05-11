@@ -17,6 +17,7 @@ public class PlayerFire : MonoBehaviour
     public ParticleSystem MuzzleFlash;
     // 피 이펙트 생성
     public ObjectPool BloodEffect;
+    private Ray _rayPosition;
     private Player _player;
     public Lazer Lazer;
     
@@ -39,38 +40,12 @@ public class PlayerFire : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            Cursor.lockState = CursorLockMode.None; 
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            Cursor.lockState = CursorLockMode.Locked; 
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            Cursor.lockState = CursorLockMode.Confined; 
-        }
-        
+        // 줌 인 아웃
         if (Input.GetMouseButtonDown(1))
         {
-            // IncreaseThrowPower();
-            
-            _zoomMode = !_zoomMode;
-            if (_zoomMode)
-            {
-                UI_SniperZoom.SetActive(true);
-                UI_Crosshair.SetActive(false);
-                _mainCamera.fieldOfView = ZoomInSize;
-            }
-            else
-            {
-                UI_SniperZoom.SetActive(false);
-                UI_Crosshair.SetActive(true);
-                _mainCamera.fieldOfView = ZoomOutSize;
-            }
-
+            ZoomInOut();
         }
+        // 총일 경우에만 발사 하게하기
         if (_player.CurrentWeapon != WeaponType.Gun)
         {
             return;
@@ -108,16 +83,25 @@ public class PlayerFire : MonoBehaviour
         // 2. 오른쪽 버튼 입력 받기
         
     }
-
+    // 카메라 모드에 따른 공격방향 설정
+    private void RaySetting()
+    {
+        if (CameraChanger.instance.Type == CameraType.QuarterCamera)
+        {
+            _rayPosition = _mainCamera.ScreenPointToRay(Input.mousePosition);
+        }
+        else
+        {
+            _rayPosition = new  Ray(Camera.main.transform.position, Camera.main.transform.forward);
+        }
+        
+    }
     private void BulletFire()
     {
-        // 2. 레이를 생성하고 발사 위치와 진행 방향을 설정
-        Ray ray = new Ray(_mainCamera.transform.position, _mainCamera.transform.forward);
-        // 3. 레이와 부딛힌 물체의 정보를 저장할 변수를 생성
+        RaySetting();
         RaycastHit hitInfo = new RaycastHit();
-        // 4. 레이를 발사한 다음,                    ㄴ 에 데이터가 있다면 피격 이펙트 생성(표시)
-        bool isHit = Physics.Raycast(ray, out hitInfo);
-        
+
+        bool isHit = Physics.Raycast(_rayPosition, out hitInfo);
         Lazer.LazerShoot(FirePosition.transform.position, hitInfo.point);
 
         if (isHit)
@@ -173,5 +157,23 @@ public class PlayerFire : MonoBehaviour
         Reloading = 0;
         _reload = false;
         UIManager.instance.ReloadBarRefresh(Reloading,_player.ReloadTime,false);
+    }
+
+    private void ZoomInOut()
+    {
+        _zoomMode = !_zoomMode;
+        if (_zoomMode)
+        {
+            UI_SniperZoom.SetActive(true);
+            UI_Crosshair.SetActive(false);
+            _mainCamera.fieldOfView = ZoomInSize;
+        }
+        else
+        {
+            UI_SniperZoom.SetActive(false);
+            UI_Crosshair.SetActive(true);
+            _mainCamera.fieldOfView = ZoomOutSize;
+        }
+
     }
 }

@@ -17,6 +17,7 @@ public class CameraChanger : Singletone<CameraChanger>
     public Transform TargetPosition;
     public Transform Position;
     private Player _player;
+    
     private void Start()
     {
         Type = CameraType.FpsCamera;
@@ -66,6 +67,7 @@ public class CameraChanger : Singletone<CameraChanger>
         {
             Type = CameraType.QuarterCamera;
             TargetPosition = QuarterPosition;
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 }

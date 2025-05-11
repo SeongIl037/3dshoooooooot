@@ -53,7 +53,6 @@ public class PlayerMelee : MonoBehaviour
     }
     private void MeleeAttack()
     {
-        Debug.Log("ggggggggggggggggggggggggg");
         // 주변 범위 체크하기
         Collider[] hits = Physics.OverlapSphere(transform.position, Radius ,~(1<<3));
         
