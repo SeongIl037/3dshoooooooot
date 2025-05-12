@@ -8,40 +8,48 @@ public class RunningEnemy : MonoBehaviour, IDamageable
     public enum EnemyState
     {
         Idle,
-        Patrol,
         Trace,
-        Return,
         Attack,
         Damaged,
         Die
     }
-
-    public HPBar _healthBar;
+    // 데이터 SO
+    [SerializeField] private EnemySO _enemyData;
     // 상태를 지정한다.
     public EnemyState CurrentState = EnemyState.Idle;
-    public float MoveSpeed = 5f;
-    public int Health = 50;
-    public int EnemyHealth = 50;
-    private EnemyHit _hit;
-
-    private GameObject _player;
-    private NavMeshAgent _agent;
-    private CharacterController _characterController;
-    private Animator _animator;
+    public float MoveSpeed => _enemyData.MoveSpeed;
+    public int EnemyMaxHealth => _enemyData.MaxHealth;
+    public int EnemyDamage => _enemyData.Damage;
     // 거리 관련
-    public float FindDistance = 5f;
-    public float AttackDistance = 2.5f;
-    
+    public float FindDistance => _enemyData.FindDistance;
+    public float AttackDistance => _enemyData.AttackDistance;
     //타이머 관련
-    public float AttackCooltime = 2f;
-    public float DeathTime = 2f;
+    public float AttackCooltime => _enemyData.AttackCooltime;
+    public float DeathTime => _enemyData.DeathTime;
+    // 변화하는 변수
+    public int Health { get; private set;}
     public float DamagedTime = 0.5f;
     private float _attackTimer = 0f;
+    // 컴포넌트 목록
+    private CharacterController _characterController;
+    private Animator _animator;
+    private GameObject _player;
+    private NavMeshAgent _agent;
+    // 에너미 색 변경하기
+    private EnemyHit _hit;
+    // 오브젝트 풀 세팅
     private ObjectPool _objectPool;
-    
+    // 체력바 세팅    
+    public HPBar _healthBar;
+   
+    // 체력 세팅
+    private void OnEnable()
+    {
+        HealthSet();
+    }
+
     private void Start()
     { 
-        HealthSet();
         _hit = GetComponent<EnemyHit>();
         _objectPool = GameObject.FindGameObjectWithTag("CoinPool").GetComponent<ObjectPool>();
         _agent = GetComponent<NavMeshAgent>();
@@ -85,8 +93,8 @@ public class RunningEnemy : MonoBehaviour, IDamageable
             return;
         }
         
-        Health -= damage.Value;
-        StartCoroutine(_hit.HitFlash());
+        Health -= damage.Value; 
+        _hit.HitFlash();
         _animator.SetTrigger("Hit");
         _healthBar.HealthbarRefresh(Health);
         
@@ -102,12 +110,10 @@ public class RunningEnemy : MonoBehaviour, IDamageable
         
         CurrentState = EnemyState.Damaged;
         StartCoroutine(Damaged_Coroutine());
-
     }
     // 상태 함수들을 구현한다.
     private void Idle()
     {
-
         if (Vector3.Distance(transform.position, _player.transform.position) < FindDistance)
         {
             Debug.Log("상태전환 : Idle -> Trace");
@@ -127,10 +133,7 @@ public class RunningEnemy : MonoBehaviour, IDamageable
             _animator.SetTrigger("MoveToAttackDelay");
             return;
         }
-        
-        Vector3 dir = (_player.transform.position - transform.position).normalized;
         //플레이어를 추적한다.
-        // _characterController.Move(dir * MoveSpeed * Time.deltaTime);
         _agent.SetDestination(_player.transform.position);
     }
     
@@ -138,13 +141,14 @@ public class RunningEnemy : MonoBehaviour, IDamageable
     {
         if (Vector3.Distance(transform.position, _player.transform.position) >= AttackDistance)
         {
-            Debug.Log("상태전환 : Trace -> Attack");
+            Debug.Log("상태전환 : Attck -> Trace");
             CurrentState = EnemyState.Trace;
             _animator.SetTrigger("AttackDelayToMove");
             return;
         }
         
         _attackTimer += Time.deltaTime;
+        
         if (_attackTimer >= AttackCooltime)
         {
             Debug.Log("플레이어 공격!");
@@ -152,7 +156,7 @@ public class RunningEnemy : MonoBehaviour, IDamageable
             _attackTimer = 0;
             _animator.SetTrigger("AttackDelayToAttack");
             Damage damage = new Damage();
-            damage.Value = 10;
+            damage.Value = EnemyDamage;
             damage.From = this.gameObject;
             damage.KnockBack = 0;
             _player.GetComponent<Player>().TakeDamage(damage);
@@ -166,23 +170,18 @@ public class RunningEnemy : MonoBehaviour, IDamageable
         yield return new WaitForSeconds(DamagedTime);
         CurrentState = EnemyState.Trace;
     }
-
-    
     private IEnumerator Die_Coroutine()
     {
-        CurrentState = EnemyState.Idle;
         yield return new WaitForSeconds(DeathTime);
         DropCoins();
-        Health = EnemyHealth;
-        HealthSet();
         gameObject.SetActive(false);
-       
+        CurrentState = EnemyState.Idle;  
         //죽는다.
     }
     private void HealthSet()
     {
-        _healthBar.SetHealth(EnemyHealth);
-        _healthBar.HealthbarRefresh(Health);
+        _healthBar.SetHealth(EnemyMaxHealth);
+        _healthBar.HealthbarRefresh(Health); 
     }
     private void DropCoins()
     {

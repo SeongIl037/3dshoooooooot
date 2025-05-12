@@ -86,9 +86,10 @@ public class PlayerFire : MonoBehaviour
     // 카메라 모드에 따른 공격방향 설정
     private void RaySetting()
     {
+        // 쿼터뷰 모드일 때에는 캐릭터가 향하는 방향으로 발사한다.
         if (CameraChanger.instance.Type == CameraType.QuarterCamera)
         {
-            _rayPosition = _mainCamera.ScreenPointToRay(Input.mousePosition);
+            _rayPosition = new Ray(transform.position, transform.forward);
         }
         else
         {

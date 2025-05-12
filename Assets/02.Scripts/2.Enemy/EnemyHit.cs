@@ -13,7 +13,12 @@ public class EnemyHit : MonoBehaviour
         _colorID = Shader.PropertyToID("_BaseColor");
         ZombieSkinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
     }
-    public IEnumerator HitFlash()
+
+    public void HitFlash()
+    {
+        StartCoroutine(HitFlash_Coroutine());
+    }
+    private IEnumerator HitFlash_Coroutine()
     {
         foreach (SkinnedMeshRenderer skin in ZombieSkinnedMeshRenderers )
         {

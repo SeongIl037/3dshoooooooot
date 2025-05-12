@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class HPBar : MonoBehaviour
 {
-    
     public Slider HealthBar;
     private float _creaseTime = 0.3f;
     // 빌보드 

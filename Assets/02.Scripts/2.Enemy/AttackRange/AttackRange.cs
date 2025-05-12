@@ -21,7 +21,7 @@ public class AttackRange : MonoBehaviour
         GameObject range = Instantiate(Range);
         range.transform.position = _player.transform.position;
         _rangePosition = range.transform.position;
-        range.transform.DOScale(new Vector3(10, 10, 10), 2f).OnComplete(()=>
+        range.transform.DOScale(new Vector3(10, 10, 10), 1.5f).OnComplete(()=>
         {
             range.SetActive(false);
         });

@@ -101,7 +101,7 @@ public class EliteEnemy : MonoBehaviour, IDamageable
             return;
         }
         Health -= damage.Value;
-        StartCoroutine(_hit.HitFlash());
+        _hit.HitFlash();
         HealthBar.HealthbarRefresh(Health);
         
         if (Health <= 0)

@@ -3,10 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using Color = UnityEngine.Color;
-using DG.Tweening;
-using UnityEditor;
-using UnityEngine.Serialization;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
@@ -113,8 +109,8 @@ public class Enemy : MonoBehaviour, IDamageable
         {
             return;
         }
-        Health -= damage.Value;
-        StartCoroutine(_hit.HitFlash());
+        Health -= damage.Value; 
+        _hit.HitFlash();
         _animator.SetTrigger("Hit");
         HealthBar.HealthbarRefresh(Health);
         

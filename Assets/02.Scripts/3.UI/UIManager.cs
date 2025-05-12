@@ -31,6 +31,7 @@ public class UIManager : Singletone<UIManager>
     public Image ReloadBar;
     public Image[] WeaponIcons;
     public Image PausePopup;
+    public Image Crosshair;
     // 게임 시작 중간 끝
     public TextMeshProUGUI CurrentGameState;
     private float _stateTimer = 0.1f;
@@ -136,8 +137,15 @@ public class UIManager : Singletone<UIManager>
         }
     }
 
-    public void UI_OptionPopup()
+    public void OnOffCrosshair()
     {
-        PausePopup.gameObject.SetActive(true);
+        if (CameraChanger.instance.Type == CameraType.QuarterCamera)
+        {
+            Crosshair.gameObject.SetActive(false);
+        }
+        else
+        {
+            Crosshair.gameObject.SetActive(true);   
+        }
     }
 }
