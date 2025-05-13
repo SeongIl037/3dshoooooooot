@@ -6,7 +6,6 @@ public class PlayerRotate : MonoBehaviour
     public float RotationSpeed = 150f; // 카메라와 회전속도가 똑같아야한다.
     public float RotationX {get; private set;} = 0;
     public float RotationY { get; private set;}= 0;
-    public GameObject Player;
     private void Update()
     {
         if (CameraChanger.instance.Type == CameraType.QuarterCamera)
@@ -26,7 +25,6 @@ public class PlayerRotate : MonoBehaviour
         
             RotationY += mouseY * RotationSpeed * Time.deltaTime;
         
-            Player.transform.eulerAngles = new Vector3(-RotationY,0, 0); 
 
         } 
     }
