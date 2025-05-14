@@ -45,6 +45,7 @@ public class RunningEnemy : MonoBehaviour, IDamageable
     // 체력 세팅
     private void OnEnable()
     {
+        Health = EnemyMaxHealth;
         HealthSet();
     }
 
